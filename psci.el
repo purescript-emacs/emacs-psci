@@ -70,6 +70,9 @@
 (defvar psci/prompt-regexp "^>+ *"
   "Prompt for `psci'.")
 
+(defvar psci/prompt "> "
+  "The psci prompt.")
+
 (defun psci ()
   "Run an inferior instance of `psci' inside Emacs."
   (interactive)
@@ -98,17 +101,23 @@
   "Major mode for `run-psci'.
 
 \\<psci-mode-map>"
-  nil "psci"
-  ;; this sets up the prompt so it matches things like: [foo@bar]
-  (setq comint-prompt-regexp psci/prompt-regexp)
-  ;; this makes it read only; a contentious subject as some prefer the
-  ;; buffer to be overwritable.
-  (setq comint-prompt-read-only t)
-  (setq comint-eol-on-send t)
+  ;; this sets up the prompt so it matches things like:>
+  (set (make-local-variable 'comint-prompt-regexp) (concat "^" (regexp-quote psci/prompt)))
   ;; this makes it so commands like M-{ and M-} work.
   (set (make-local-variable 'paragraph-separate) "\\'")
+  (set (make-local-variable 'paragraph-start) comint-prompt-regexp)
+  ;; this makes it read only; a contentious subject as some prefer the
+  ;; buffer to be overwritable.
+  (set (make-local-variable 'comint-input-sender-no-newline) t)
+  ;; (setq comint-input-sender 'ielm-input-sender)
+  ;; (setq comint-get-old-input 'ielm-get-old-input)
+  (set (make-local-variable 'comint-process-echoes) nil)
+  (set (make-local-variable 'comint-prompt-read-only) t)
+  ;;(set (make-local-variable 'comint-eol-on-send) t)
+  (set (make-local-variable 'comint-input-filter-functions) nil)
   (set (make-local-variable 'font-lock-defaults) '(purescript-font-lock-keywords t))
-  (set (make-local-variable 'paragraph-start) psci/prompt-regexp))
+  (setq-local comment-start "-- ")
+  (setq-local comment-use-syntax t))
 
 ;; this has to be done in a hook. grumble grumble.
 (add-hook 'psci-mode-hook 'psci/--initialize)
