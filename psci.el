@@ -5,7 +5,7 @@
 ;; Author: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Maintainer: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Version: 0.0.1
-;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0"))
+;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0") (projectile "0.11.0") (s "1.9.0") (f 0.17.1))
 ;; Keywords: purescript psci repl major mode
 ;; URL: https://github.com/ardumont/emacs-psci
 
@@ -43,6 +43,8 @@
 (require 'comint)
 (require 'dash)
 (require 'purescript-mode)
+(require 'projectile)
+(require 's)
 
 (defvar psci/buffer-name "Psci"
   "Buffer name of the psci buffer.")
@@ -101,6 +103,7 @@
   ;; this makes it read only; a contentious subject as some prefer the
   ;; buffer to be overwritable.
   (setq comint-prompt-read-only t)
+  (setq comint-eol-on-send t)
   ;; this makes it so commands like M-{ and M-} work.
   (set (make-local-variable 'paragraph-separate) "\\'")
   (set (make-local-variable 'font-lock-defaults) '(purescript-font-lock-keywords t))
@@ -121,11 +124,15 @@
     (comint-send-region process region-start region-end)
     (process-send-eof process)))
 
+(defun psci/load-file! (filename)
+  "Load the purescript FILENAME inside the current running session."
+  (psci/run-psci-string! (format ":m %s" filename)))
+
 ;;;###autoload
-(defun psci/load-file! ()
+(defun psci/load-current-file! ()
   "Load the current file in the session."
   (interactive)
-  (psci/run-psci-string! (format ":m %s" buffer-file-name)))
+  (psci/load-file! buffer-file-name))
 
 (defun psci/compute-module-name! ()
   "Compute the current file's module name."
@@ -142,8 +149,62 @@
   (-when-let (module-name (psci/compute-module-name!))
     (psci/run-psci-string! (format ":i %s" module-name))))
 
+(defvar psci/project-module-file ".psci"
+  "The default file referencing the purescript modules to load at psci startup.")
+
+(defun psci/--file-content (filename)
+  "Load the FILENAME's content as a string."
+  (with-temp-buffer
+    (insert-file-contents filename)
+    (buffer-substring-no-properties (point-min) (point-max))))
+
+(defun psci/--symbol (sym n)
+  "Compute the repetition of a symbol SYM N times as a string."
+  (--> n
+    (-repeat it sym)
+    (s-join "" it)))
+
+(defun psci/--compute-relative-path (directory file-name)
+  "Compute the relative path between the DIRECTORY and the FILE-NAME."
+  (->> directory
+    (f-relative file-name)
+    f-split
+    length
+    1-
+    (psci/--symbol "../")))
+
+(defun psci/--project-module-files! ()
+  "Compulse the list of modules for the current project."
+  (let* ((parent-root-folder (projectile-project-root))
+         (relative-path      (psci/--compute-relative-path (projectile-project-root) buffer-file-name)))
+    (-when-let (psci-module-file (expand-file-name psci/project-module-file parent-root-folder))
+      (when (file-exists-p psci-module-file)
+        (->> psci-module-file
+          psci/--file-content
+          (s-split "\n")
+          (--map (s-concat relative-path (cadr (s-split ":m " it))))
+          (-filter 'file-exists-p)
+          nreverse)))))
+
+;;;###autoload
+(defun psci/load-project-modules! ()
+  "Load the modules needed for the repl session.
+We chose to load the .psci file's content (the purescript doc proposes its use)."
+  (interactive)
+  (-when-let (modules (psci/--project-module-files!))
+    (call-interactively 'psci/reset!)
+    (mapc #'psci/load-file! modules)))
+
+;;;###autoload
+(defun psci/reset! ()
+  "Reset the current status of the repl session."
+  (interactive)
+  (psci/run-psci-string! ":r"))
+
+;; Add some default bindings
 (add-hook 'purescript-mode-hook (lambda ()
-                                  (define-key purescript-mode-map (kbd "C-c C-l") 'psci/load-file!)
+                                  (define-key purescript-mode-map (kbd "C-c C-l") 'psci/load-current-file!)
+                                  (define-key purescript-mode-map (kbd "C-c C-r") 'psci/load-project-modules!)
                                   (define-key purescript-mode-map (kbd "C-c M-n") 'psci/load-module!)))
 
 (provide 'psci)

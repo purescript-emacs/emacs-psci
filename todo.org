@@ -1,7 +1,7 @@
 #+title: backlog
 #+author: ardumont
 
-* IN-PROGRESS 0.0.1 [77%]
+* IN-PROGRESS 0.0.1 [90%]
 - [X] Prepare backlog
 - [X] First implementation
 - [X] Add some documentation
@@ -11,7 +11,8 @@
 - [X] Load file in the current session
 - [X] Load module in the current session
 - [X] Add purescript-mode-hook function to extend function to load file or module
-- [ ] Permit the loading
+- [X] Permit the loading of dependencies modules
+- [X] Send the reset command
 - [ ] Ensure completion works (as in a cli)
 * TODO 0.0.2 [%]
 - [ ] Add to melpa
