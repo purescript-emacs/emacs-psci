@@ -12,8 +12,8 @@ Major mode for [[http://www.purescript.org/][purescript]]'s repl psci.
 
 ** How
 
-Based on comint.
-Following this tutorial http://www.masteringemacs.org/article/comint-writing-command-interpreter.
+Based on comint-mode (command interpreter).
+Following [[http://www.masteringemacs.org/article/comint-writing-command-interpreter][this tutorial]].
 
 ** Why
 
@@ -24,10 +24,11 @@ So I thought of giving it a shot.
 ** When
 
 How about now?
+(work in progress)
 
 ** Who
 
-[[https://github.com/ardumont][me]]!
+[[https://github.com/ardumont][me]]
 
 * Install
 
@@ -60,4 +61,30 @@ This permits, using the same universal binding `C-c C-z`, to go back and forth b
 * Runtime dependencies
 
 A purescript dev platform ready.
-I based this on https://leanpub.com/purescript/
+I based this development on the online book https://leanpub.com/purescript/.
+
+* Contributions
+
+** PR
+
+More than welcome.
+Send me a PR and I will gladly merge it.
+
+Simply, use fork, branch, and rebase to the latest commit.
+Also, I prefer code that is understandable (ymmv) and doc-stringified.
+
+** Issues
+
+Issues, there will be.
+
+Open issues [[https://github.com/ardumont/emacs-psci/issues][on the tracker]], I'll do my best to answer.
+
+Just, be sure to be clear, complete and concise about what your trouble is.
+
+I'm open to suggestions but I'm far from being omniscient. Please, add information links, this helps everyone.
+
+* Miscellaneous
+
+I tend to rely on other people's code.
+That's why I use a lot of dependencies.
+I'll remove the unnecessary dependencies (for the moment, none but surely, some code can be rewritten without the deps) later.
