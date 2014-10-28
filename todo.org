@@ -1,0 +1,13 @@
+#+title: backlog
+#+author: ardumont
+
+* IN-PROGRESS 0.0.1 [66%]
+- [X] Prepare backlog
+- [X] First implementation
+- [ ] Add some documentation
+* TODO 0.0.2 [%]
+- [ ] Add to melpa
+- [ ] Add to marmalade
+- [ ] Add to el-get
+* TODO 0.0.3 [%]
+- [ ] Send compilation step to repl
