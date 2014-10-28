@@ -45,6 +45,7 @@
 (require 'purescript-mode)
 (require 'projectile)
 (require 's)
+(require 'f)
 
 (defvar psci/buffer-name "psci"
   "Buffer name of the psci buffer.")
