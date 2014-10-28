@@ -36,12 +36,14 @@ For the moment, clone the repository, add to load-path and eval the buffer psci.
 
 ** Start
 
-`M-x psci/run`
+#+begin_src sh
+M-x psci/run
+#+end_src
 
 ** Setup
 
 I encounter (thanks to @purcell) a simple mode that I quite like which is called [[https://github.com/tomterl/repl-toggle][repl-toggle]].
-This permits, using the same universal binding, to come and back between the repl and the buffer.
+This permits, using the same universal binding, to go back and forth between the repl and the buffer.
 
 #+begin_src emacs-lisp
 (require 'repl-toggle)
