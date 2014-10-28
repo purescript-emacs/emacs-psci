@@ -135,5 +135,10 @@
   (interactive)
   (let ((module-name (psci/compute-module-name!)))
     (psci/run-psci-string! (format ":i %s" module-name))))
+
+(add-hook 'purescript-mode-hook (lambda ()
+                                  (define-key purescript-mode-map (kbd "C-c C-l") 'psci/load-file!)
+                                  (define-key purescript-mode-map (kbd "C-c M-n") 'psci/load-module!)))
+
 (provide 'psci)
 ;;; psci.el ends here
