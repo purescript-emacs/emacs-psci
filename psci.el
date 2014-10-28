@@ -58,7 +58,7 @@
     map)
   "Basic mode map for `psci'.")
 
-(defvar psci/prompt-regexp "^\\(?:\\[[^@]+@[^@]+\\]\\)"
+(defvar psci/prompt-regexp "^>+ *"
   "Prompt for `psci'.")
 
 (defun psci/run ()
