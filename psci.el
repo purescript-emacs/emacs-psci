@@ -32,7 +32,7 @@
 ;; Input is handled by the comint package, and output is passed
 ;; through the pretty-printer.
 
-;; To start: M-x psci/run.  Type C-h m in the *Psci* buffer for more info.
+;; To start: M-x psci.  Type C-h m in the *Psci* buffer for more info.
 
 ;;
 ;; More informations: https://ardumont/emacs-psci
@@ -54,10 +54,10 @@
   (format "*%s*" buffer-name))
 
 (defvar psci/file-path "psci"
-  "Path to the program used by `psci/run' function.")
+  "Path to the program used by `psci' function.")
 
 (defvar psci/arguments '()
-  "Commandline arguments to pass to `psci/run' function.")
+  "Commandline arguments to pass to `psci' function.")
 
 (defvar psci-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
@@ -69,7 +69,7 @@
 (defvar psci/prompt-regexp "^>+ *"
   "Prompt for `psci'.")
 
-(defun psci/run ()
+(defun psci ()
   "Run an inferior instance of `psci' inside Emacs."
   (interactive)
   (let* ((psci-program psci/file-path)
@@ -112,29 +112,29 @@
 ;; this has to be done in a hook. grumble grumble.
 (add-hook 'psci-mode-hook 'psci/--initialize)
 
-(defun psci/run-psci-string! (command)
+(defun psci/--run-psci-string! (command)
   "Run purescript code COMMAND as string."
   (let ((process (get-buffer-process (psci/process-name psci/buffer-name))))
     (comint-send-string process (format "%s\n" command))
     (process-send-eof process)))
 
-(defun psci/run-psci-region! (region-start region-end)
+(defun psci/--run-psci-region! (region-start region-end)
   "Run purescript code between REGION-START and REGION-END."
   (let ((process (get-buffer-process (psci/process-name psci/buffer-name))))
     (comint-send-region process region-start region-end)
     (process-send-eof process)))
 
-(defun psci/load-file! (filename)
+(defun psci/--load-file! (filename)
   "Load the purescript FILENAME inside the current running session."
-  (psci/run-psci-string! (format ":m %s" filename)))
+  (psci/--run-psci-string! (format ":m %s" filename)))
 
 ;;;###autoload
 (defun psci/load-current-file! ()
   "Load the current file in the session."
   (interactive)
-  (psci/load-file! buffer-file-name))
+  (psci/--load-file! buffer-file-name))
 
-(defun psci/compute-module-name! ()
+(defun psci/--compute-module-name! ()
   "Compute the current file's module name."
   (save-excursion
     (goto-char (point-min))
@@ -146,8 +146,8 @@
 (defun psci/load-module! ()
   "Load the module inside the repl session."
   (interactive)
-  (-when-let (module-name (psci/compute-module-name!))
-    (psci/run-psci-string! (format ":i %s" module-name))))
+  (-when-let (module-name (psci/--compute-module-name!))
+    (psci/--run-psci-string! (format ":i %s" module-name))))
 
 (defvar psci/project-module-file ".psci"
   "The default file referencing the purescript modules to load at psci startup.")
@@ -193,13 +193,13 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
   (interactive)
   (-when-let (modules (psci/--project-module-files!))
     (call-interactively 'psci/reset!)
-    (mapc #'psci/load-file! modules)))
+    (mapc #'psci/--load-file! modules)))
 
 ;;;###autoload
 (defun psci/reset! ()
   "Reset the current status of the repl session."
   (interactive)
-  (psci/run-psci-string! ":r"))
+  (psci/--run-psci-string! ":r"))
 
 ;; Add some default bindings
 (add-hook 'purescript-mode-hook (lambda ()

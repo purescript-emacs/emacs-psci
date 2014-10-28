@@ -43,7 +43,7 @@ M-x package-install-file RET /path/to/emacs-psci/psci.el
 ** Start
 
 #+begin_src sh
-M-x psci/run
+M-x psci
 #+end_src
 
 ** Setup
@@ -54,5 +54,10 @@ This permits, using the same universal binding `C-c C-z`, to go back and forth b
 #+begin_src emacs-lisp
 (require 'repl-toggle)
 (require 'psci)
-(add-to-list 'rtog/mode-repl-alist '(purescript-mode . psci/run))
+(add-to-list 'rtog/mode-repl-alist '(purescript-mode . psci))
 #+end_src
+
+* Runtime dependencies
+
+A purescript dev platform ready.
+I based this on https://leanpub.com/purescript/
