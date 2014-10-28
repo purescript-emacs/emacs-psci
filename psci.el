@@ -120,5 +120,20 @@
   "Load the current file in the session."
   (interactive)
   (psci/run-psci-string! (format ":m %s" buffer-file-name)))
+
+(defun psci/compute-module-name! ()
+  "Compute the current file's module name."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((regexp "^module \\\([a-zA-Z0-9\\\.]+\\\) "))
+      (search-forward-regexp regexp)
+      (match-string 1))))
+
+;;;###autoload
+(defun psci/load-module! ()
+  "Load the module inside the repl session."
+  (interactive)
+  (let ((module-name (psci/compute-module-name!)))
+    (psci/run-psci-string! (format ":i %s" module-name))))
 (provide 'psci)
 ;;; psci.el ends here
