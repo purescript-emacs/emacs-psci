@@ -63,12 +63,19 @@
 (defvar psci-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
     ;; example definition
-    (define-key map "\t" 'completion-at-point)
+    (define-key map "\t"     'completion-at-point)
+    (define-key map (kbd "C-m") 'psci/send-input)
+    (define-key map (kbd "C-j") 'psci/send-input)
     map)
   "Basic mode map for `psci'.")
 
-(defvar psci/prompt-regexp "^>+ *"
-  "Prompt for `psci'.")
+(defun psci/send-input (&optional no-newline artificial)
+  "Send input.
+NO-NEWLINE and ARTIFICIAL are optional.
+See `'comint-send-input`' for more information."
+  (interactive)
+  (comint-send-input no-newline artificial)
+  (comint-send-eof))
 
 (defvar psci/prompt "> "
   "The psci prompt.")
