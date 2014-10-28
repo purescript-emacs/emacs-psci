@@ -84,6 +84,7 @@
   (setq comint-process-echoes t)
   (setq comint-use-prompt-regexp t))
 
+;;;###autoload
 (define-derived-mode psci-mode comint-mode "Psci"
   "Major mode for `run-psci'.
 
@@ -102,5 +103,22 @@
 ;; this has to be done in a hook. grumble grumble.
 (add-hook 'psci-mode-hook 'psci/--initialize)
 
+(defun psci/run-psci-string! (command)
+  "Run purescript code COMMAND as string."
+  (let ((process (get-buffer-process (psci/process-name psci/buffer-name))))
+    (comint-send-string process (format "%s\n" command))
+    (process-send-eof process)))
+
+(defun psci/run-psci-region! (region-start region-end)
+  "Run purescript code between REGION-START and REGION-END."
+  (let ((process (get-buffer-process (psci/process-name psci/buffer-name))))
+    (comint-send-region process region-start region-end)
+    (process-send-eof process)))
+
+;;;###autoload
+(defun psci/load-file! ()
+  "Load the current file in the session."
+  (interactive)
+  (psci/run-psci-string! (format ":m %s" buffer-file-name)))
 (provide 'psci)
 ;;; psci.el ends here
