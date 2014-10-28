@@ -2,6 +2,7 @@
 #+author: ardumont
 
 At the moment, not everything works.
+
 For example, the `:r` command (which is supposed to reset the loaded modules of the current session) does nothing (but it does work in a terminal session).
 
 * Description
@@ -32,7 +33,12 @@ How about now?
 
 As soon as something is working, I intend to release on melpa/melpa-stable/marmalade.
 
-For the moment, clone the repository, add to load-path and eval the buffer psci.el.
+For the moment, clone the repository, and:
+#+begin_src sh
+M-x package-install-file RET /path/to/emacs-psci/psci.el
+#+end_src
+
+*Note* Provided you already use melpa, the needed deps should be installed.
 
 ** Start
 
@@ -43,13 +49,10 @@ M-x psci/run
 ** Setup
 
 I encounter (thanks to @purcell) a simple mode that I quite like which is called [[https://github.com/tomterl/repl-toggle][repl-toggle]].
-This permits, using the same universal binding, to go back and forth between the repl and the buffer.
+This permits, using the same universal binding `C-c C-z`, to go back and forth between the repl and the buffer.
 
 #+begin_src emacs-lisp
 (require 'repl-toggle)
 (require 'psci)
 (add-to-list 'rtog/mode-repl-alist '(purescript-mode . psci/run))
 #+end_src
-
-Now, using `C-c C-z` binding inside a purescript buffer, this will switch on a psci buffer.
-And inside a psci buffer, this same binding will get back inside the purescript buffer you are coming from.
