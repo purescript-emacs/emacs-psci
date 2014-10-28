@@ -5,8 +5,9 @@
 - [X] Prepare backlog
 - [X] First implementation
 - [X] Add some documentation
-- [-] Ensure everything is ok [50%]
+- [-] Ensure everything is ok [66%]
   - [X] Fix prompt regexp
+  - [X] Ensure the psci-mode-map is loaded
   - [ ] Ensure completion works (as in a cli)
 * TODO 0.0.2 [%]
 - [ ] Add to melpa

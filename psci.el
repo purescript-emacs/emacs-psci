@@ -51,7 +51,7 @@
 (defvar psci/arguments '()
   "Commandline arguments to pass to `psci/run' function.")
 
-(defvar psci/mode-map
+(defvar psci-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
     ;; example definition
     (define-key map "\t" 'completion-at-point)
