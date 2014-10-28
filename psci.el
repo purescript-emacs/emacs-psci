@@ -32,7 +32,7 @@
 ;; Input is handled by the comint package, and output is passed
 ;; through the pretty-printer.
 
-;; To start: M-x psci.  Type C-h m in the *Psci* buffer for more info.
+;; To start: M-x psci.  Type C-h m in the *psci* buffer for more info.
 
 ;;
 ;; More informations: https://ardumont/emacs-psci
@@ -46,7 +46,7 @@
 (require 'projectile)
 (require 's)
 
-(defvar psci/buffer-name "Psci"
+(defvar psci/buffer-name "psci"
   "Buffer name of the psci buffer.")
 
 (defun psci/process-name (buffer-name)
@@ -74,7 +74,7 @@
   (interactive)
   (let* ((psci-program psci/file-path)
          (buffer (comint-check-proc psci/buffer-name)))
-    ;; pop to the "*Psci*" buffer if the process is dead, the
+    ;; pop to the "*psci*" buffer if the process is dead, the
     ;; buffer is missing or it's got the wrong mode.
     (pop-to-buffer-same-window
      (if (or buffer (not (derived-mode-p 'psci-mode))
@@ -93,11 +93,11 @@
   (setq comint-use-prompt-regexp t))
 
 ;;;###autoload
-(define-derived-mode psci-mode comint-mode "Psci"
+(define-derived-mode psci-mode comint-mode "psci"
   "Major mode for `run-psci'.
 
 \\<psci-mode-map>"
-  nil "Psci"
+  nil "psci"
   ;; this sets up the prompt so it matches things like: [foo@bar]
   (setq comint-prompt-regexp psci/prompt-regexp)
   ;; this makes it read only; a contentious subject as some prefer the
