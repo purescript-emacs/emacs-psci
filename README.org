@@ -1,0 +1,25 @@
+#+title: psci-mode
+#+author: ardumont
+
+* What
+
+Major mode for [[http://www.purescript.org/][purescript]]'s repl psci.
+
+* How
+
+Based on comint.
+Following this tutorial http://www.masteringemacs.org/article/comint-writing-command-interpreter.
+
+* Why
+
+The [[https://github.com/dysinger/purescript-mode][purescript-mode]] (forked from [[https://github.com/haskell/haskell-mode][haskell-mode]]) does not provide any repl integration (yet?).
+The experience inside the terminal is somewhat tedious at the moment.
+So I thought of giving it a shot.
+
+* When
+
+How about now?
+
+* Who
+
+me!
