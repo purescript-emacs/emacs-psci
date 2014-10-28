@@ -28,7 +28,12 @@
 
 ;;; Commentary:
 
-;; Major mode for purescript repl psci
+;; Provides a nice interface to evaluating Purescript expression.
+;; Input is handled by the comint package, and output is passed
+;; through the pretty-printer.
+
+;; To start: M-x psci/run.  Type C-h m in the *Psci* buffer for more info.
+
 ;;
 ;; More informations: https://ardumont/emacs-psci
 ;; Issue tracker: https://github.com/ardumont/emacs-psci/issues
