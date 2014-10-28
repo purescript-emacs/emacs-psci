@@ -1,10 +1,10 @@
 #+title: backlog
 #+author: ardumont
 
-* IN-PROGRESS 0.0.1 [66%]
+* IN-PROGRESS 0.0.1 [100%]
 - [X] Prepare backlog
 - [X] First implementation
-- [ ] Add some documentation
+- [X] Add some documentation
 * TODO 0.0.2 [%]
 - [ ] Add to melpa
 - [ ] Add to marmalade

@@ -30,3 +30,21 @@ How about now?
 As soon as something is working, I intend to release on melpa/melpa-stable/marmalade.
 
 For the moment, clone the repository, add to load-path and eval the buffer psci.el.
+
+** Start
+
+`M-x psci/run`
+
+** Setup
+
+I encounter (thanks to @purcell) a simple mode that I quite like which is called [[https://github.com/tomterl/repl-toggle][repl-toggle]].
+This permits, using the same universal binding, to come and back between the repl and the buffer.
+
+#+begin_src emacs-lisp
+(require 'repl-toggle)
+(require 'psci)
+(add-to-list 'rtog/mode-repl-alist '(purescript-mode . psci/run))
+#+end_src
+
+Now, using `C-c C-z` binding inside a purescript buffer, this will switch on a psci buffer.
+And inside a psci buffer, this same binding will get back inside the purescript buffer you are coming from.
