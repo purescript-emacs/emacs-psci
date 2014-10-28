@@ -1,25 +1,32 @@
 #+title: psci-mode
 #+author: ardumont
 
-* What
+* Description
+** What
 
 Major mode for [[http://www.purescript.org/][purescript]]'s repl psci.
 
-* How
+** How
 
 Based on comint.
 Following this tutorial http://www.masteringemacs.org/article/comint-writing-command-interpreter.
 
-* Why
+** Why
 
 The [[https://github.com/dysinger/purescript-mode][purescript-mode]] (forked from [[https://github.com/haskell/haskell-mode][haskell-mode]]) does not provide any repl integration (yet?).
 The experience inside the terminal is somewhat tedious at the moment.
 So I thought of giving it a shot.
 
-* When
+** When
 
 How about now?
 
-* Who
+** Who
 
-me!
+[[https://github.com/ardumont][me]]!
+
+* Install
+
+As soon as something is working, I intend to release on melpa/melpa-stable/marmalade.
+
+For the moment, clone the repository, add to load-path and eval the buffer psci.el.
