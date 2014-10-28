@@ -1,18 +1,19 @@
 #+title: backlog
 #+author: ardumont
 
-* IN-PROGRESS 0.0.1 [75%]
+* IN-PROGRESS 0.0.1 [77%]
 - [X] Prepare backlog
 - [X] First implementation
 - [X] Add some documentation
-- [-] Ensure everything is ok [66%]
+- [X] Ensure everything is ok [100%]
   - [X] Fix prompt regexp
   - [X] Ensure the psci-mode-map is loaded
-  - [ ] Ensure completion works (as in a cli)
+- [X] Load file in the current session
+- [X] Load module in the current session
+- [X] Add purescript-mode-hook function to extend function to load file or module
+- [ ] Permit the loading
+- [ ] Ensure completion works (as in a cli)
 * TODO 0.0.2 [%]
 - [ ] Add to melpa
 - [ ] Add to marmalade
 - [ ] Add to el-get
-* TODO 0.0.3 [0%]
-- [ ] Send compilation step to repl
-- [ ] Permit auto-completion through <tab>

@@ -5,7 +5,7 @@
 ;; Author: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Maintainer: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Version: 0.0.1
-;; Package-Requires: ((purescript-mode "13.10"))
+;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0"))
 ;; Keywords: purescript psci repl major mode
 ;; URL: https://github.com/ardumont/emacs-psci
 
@@ -36,6 +36,7 @@
 ;;; Code:
 
 (require 'comint)
+(require 'dash)
 (require 'purescript-mode)
 
 (defvar psci/buffer-name "Psci"
@@ -133,7 +134,7 @@
 (defun psci/load-module! ()
   "Load the module inside the repl session."
   (interactive)
-  (let ((module-name (psci/compute-module-name!)))
+  (-when-let (module-name (psci/compute-module-name!))
     (psci/run-psci-string! (format ":i %s" module-name))))
 
 (add-hook 'purescript-mode-hook (lambda ()
