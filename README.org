@@ -1,6 +1,9 @@
 #+title: psci-mode
 #+author: ardumont
 
+At the moment, not everything works.
+For example, the `:r` command (which is supposed to reset the loaded modules of the current session) does nothing (but it does work in a terminal session).
+
 * Description
 ** What
 
