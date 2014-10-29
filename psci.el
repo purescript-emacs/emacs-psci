@@ -102,19 +102,19 @@
   "Major mode for `run-psci'.
 
 \\<psci-mode-map>"
-  (setq-local comint-prompt-regexp (concat "^" (regexp-quote psci/prompt)))
-  (setq-local paragraph-separate "\\'") ;; so commands like M-{ and M-} work.
-  (setq-local paragraph-start comint-prompt-regexp)
-  (setq-local comint-input-sender-no-newline nil)
-  ;; (setq-local comint-input-sender 'comint-simple-send)
-  ;; (setq-local comint-get-old-input 'comint-get-old-input-default)
-  (setq-local comint-process-echoes nil)
-  (setq-local comint-prompt-read-only t) ;; read-only prompt
-  (setq-local comint-eol-on-send t)
-  (setq-local comint-input-filter-functions nil)
-  (setq-local font-lock-defaults '(purescript-font-lock-keywords t))
-  (setq-local comment-start "-- ")
-  (setq-local comment-use-syntax t))
+  (set (make-local-variable 'comint-prompt-regexp) (concat "^" (regexp-quote psci/prompt)))
+  (set (make-local-variable 'paragraph-separate) "\\'") ;; so commands like M-{ and M-} work.
+  (set (make-local-variable 'paragraph-start) comint-prompt-regexp)
+  (set (make-local-variable 'comint-input-sender-no-newline) nil)
+  (set (make-local-variable 'comint-input-sender) 'comint-simple-send)
+  (set (make-local-variable 'comint-get-old-input) 'comint-get-old-input-default)
+  (set (make-local-variable 'comint-process-echoes) nil)
+  (set (make-local-variable 'comint-prompt-read-only) t) ;; read-only prompt
+  (set (make-local-variable 'comint-eol-on-send) t)
+  (set (make-local-variable 'comint-input-filter-functions) nil)
+  (set (make-local-variable 'font-lock-defaults) '(purescript-font-lock-keywords t))
+  (set (make-local-variable 'comment-start) "-- ")
+  (set (make-local-variable 'comment-use-syntax) t))
 
 (defun psci/--run-psci-command! (command)
   "Run psci COMMAND as string."
