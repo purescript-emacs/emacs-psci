@@ -238,9 +238,11 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
     map)
   "Basic mode map for `inferior-psci-mode'.")
 
-(defgroup psci nil " psci customisation group."
+(defgroup psci nil "psci customisation group."
   :tag "psci"
-  :version "0.0.4")
+  :version "0.0.4"
+  :group 'purescript
+  :prefix "psci/")
 
 ;;;###autoload
 (define-minor-mode inferior-psci-mode "Extend the bindings ."
