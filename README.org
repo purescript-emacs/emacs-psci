@@ -104,6 +104,16 @@ This will open a psci repl within emacs from your current project root folder (u
 
 ** Setup
 
+*** bindings
+
+Add the inferior-psci-mode to the purescript-mode will permit access to some default bindings:
+
+#+begin_src emacs-lisp
+(add-hook 'purescript-mode-hook 'inferior-psci-mode)
+#+end_src
+
+*** repl toggle
+
 I encounter (thanks to @purcell) a simple mode that I quite like which is called [[https://github.com/tomterl/repl-toggle][repl-toggle]].
 This permits, using the same universal binding `C-c C-z`, to go back and forth between the repl and the buffer.
 
@@ -126,8 +136,6 @@ Default bindings available from a purescript buffer:
 | N/A         | M-x psci/reset!                | Equivalent of `:r` - Reset                                                                   |
 | C-c C-z     |                                | Provided you use the previous setup, this will switch back and forth between repl and buffer |
 |-------------+--------------------------------+----------------------------------------------------------------------------------------------|
-
-
 
 * Runtime dependencies
 

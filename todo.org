@@ -27,7 +27,7 @@ CLOSED: [2014-10-29 Wed 18:54]
 - [X] Add to el-get - https://github.com/ardumont/el-get/blob/add-psci-recipe/recipes/psci.rcp
 - [X] Update documentation regarding installation steps
 - [X] Update documentation regarding usage
-* IN-PROGRESS 0.0.4 [88%]
+* IN-PROGRESS 0.0.4 [100%]
 - [X] Update version
 - [X] Add an interactive command for displaying the current version
 - [X] Use compatible with old emacs version api (replace `(setq-local var val)` with `(set (make-local-variable 'var) val)`)
@@ -36,4 +36,4 @@ CLOSED: [2014-10-29 Wed 18:54]
 - [X] Update el-get PR to remove projectile dependencies - https://github.com/dimitri/el-get/pull/1973
 - [X] Add a minor mode instead of modifying purescript-mode-map
 - [X] Update heading information about the minor-mode activation and setup
-- [ ] Update documentation about the minor-mode activation and setup
+- [X] Update documentation about the minor-mode activation and setup
