@@ -103,21 +103,17 @@ See `'comint-send-input`' for more information."
   "Major mode for `run-psci'.
 
 \\<psci-mode-map>"
-  ;; this sets up the prompt so it matches things like:>
-  (set (make-local-variable 'comint-prompt-regexp) (concat "^" (regexp-quote psci/prompt)))
-  ;; this makes it so commands like M-{ and M-} work.
-  (set (make-local-variable 'paragraph-separate) "\\'")
-  (set (make-local-variable 'paragraph-start) comint-prompt-regexp)
-  ;; this makes it read only; a contentious subject as some prefer the
-  ;; buffer to be overwritable.
-  (set (make-local-variable 'comint-input-sender-no-newline) t)
-  ;; (setq comint-input-sender 'ielm-input-sender)
-  ;; (setq comint-get-old-input 'ielm-get-old-input)
-  (set (make-local-variable 'comint-process-echoes) nil)
-  (set (make-local-variable 'comint-prompt-read-only) t)
-  ;;(set (make-local-variable 'comint-eol-on-send) t)
-  (set (make-local-variable 'comint-input-filter-functions) nil)
-  (set (make-local-variable 'font-lock-defaults) '(purescript-font-lock-keywords t))
+  (setq-local comint-prompt-regexp (concat "^" (regexp-quote psci/prompt)))
+  (setq-local paragraph-separate "\\'") ;; so commands like M-{ and M-} work.
+  (setq-local paragraph-start comint-prompt-regexp)
+  (setq-local comint-input-sender-no-newline nil)
+  ;; (setq-local comint-input-sender 'comint-simple-send)
+  ;; (setq-local comint-get-old-input 'comint-get-old-input-default)
+  (setq-local comint-process-echoes nil)
+  (setq-local comint-prompt-read-only t) ;; read-only prompt
+  (setq-local comint-eol-on-send t)
+  (setq-local comint-input-filter-functions nil)
+  (setq-local font-lock-defaults '(purescript-font-lock-keywords t))
   (setq-local comment-start "-- ")
   (setq-local comment-use-syntax t))
 
