@@ -212,9 +212,9 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
   (interactive)
   (lexical-let ((archive-folder (psci/--compute-modules-folder (projectile-project-root))))
     (deferred:$
-      (deferred:process-shell (format "rm -rf %s/node_modules/*" archive-folder)) ;; clean compiled version
-      (deferred:nextc it (lambda () (call-interactively 'psci/reset!)))                ;; flush in-memory version
-      (deferred:nextc it                                                          ;; at last reload all files
+      (deferred:process-shell "rm -rf " (shell-quote-argument (format "%s/node_modules/*" archive-folder))) ;; clean compiled version
+      (deferred:nextc it (lambda () (call-interactively 'psci/reset!)))                                         ;; flush in-memory version
+      (deferred:nextc it                                                                                   ;; at last reload all files
         (lambda ()
           (-when-let (modules (psci/--project-module-files!))
             (mapc #'psci/--load-file! modules)))))))
