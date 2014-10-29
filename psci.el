@@ -153,6 +153,13 @@ See `'comint-send-input`' for more information."
     (comint-simple-send process command)
     (process-send-eof process)))
 
+;; (defun psci/load-region! (region-start region-end)
+;;   "Run purescript code between REGION-START and REGION-END."
+;;   (interactive "r")
+;;   (-when-let (process (get-buffer-process (psci/process-name psci/buffer-name)))
+;;     (comint-send-region process region-start region-end)
+;;     (process-send-eof process)))
+
 (defun psci/--load-file! (filename)
   "Load the purescript FILENAME inside the current running session."
   (psci/--run-psci-command! (format ":m %s" filename)))
