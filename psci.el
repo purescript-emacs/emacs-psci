@@ -127,9 +127,16 @@
 
 ;;;###autoload
 (defun psci/load-current-file! ()
-  "Load the current file in the session."
+  "Load the current file in the psci repl."
   (interactive)
-  (psci/--load-file! buffer-file-name))
+  (lexical-let ((archive-folder (psci/--compute-modules-folder (projectile-project-root)))
+                (module-name    (psci/--compute-module-name!)))
+    (when module-name
+      (deferred:$
+        (deferred:process-shell (format "rm -rf %s/node_modules/%s" archive-folder module-name))
+        (deferred:nextc it
+          (lambda ()
+            (call-interactively 'psci/reset!)))))))
 
 (defun psci/--compute-module-name! ()
   "Compute the current file's module name."

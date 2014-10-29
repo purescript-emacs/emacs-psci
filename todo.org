@@ -14,10 +14,10 @@ CLOSED: [2014-10-29 Wed 16:37]
 - [X] Add purescript-mode-hook function to extend bindings to load file or module
 - [X] Permit the loading of dependencies modules
 - [X] Send the reset command
-* IN-PROGRESS 0.0.2 [50%]
+* IN-PROGRESS 0.0.2 [75%]
 - [X] Run the psci command from the folder containing the .psci file
 - [X] Improve the modules (re)loading by removing existing files (.psci_modules/node_modules folder)
-- [ ] Improve the module (re)loading by removing existings files (insid .psci_modules folder)
+- [X] Improve the module (re)loading by removing existings files (inside .psci_modules folder)
 - [ ] Ensure completion works (as in a cli)
 * TODO 0.0.3 [%]
 - [ ] Add to melpa
