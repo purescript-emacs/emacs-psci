@@ -1,7 +1,8 @@
 #+title: backlog
 #+author: ardumont
 
-* IN-PROGRESS 0.0.1 [90%]
+* DONE 0.0.1 [100%]
+CLOSED: [2014-10-29 Wed 16:37]
 - [X] Prepare backlog
 - [X] First implementation
 - [X] Add some documentation
@@ -10,11 +11,15 @@
   - [X] Ensure the psci-mode-map is loaded
 - [X] Load file in the current session
 - [X] Load module in the current session
-- [X] Add purescript-mode-hook function to extend function to load file or module
+- [X] Add purescript-mode-hook function to extend bindings to load file or module
 - [X] Permit the loading of dependencies modules
 - [X] Send the reset command
+* IN-PROGRESS 0.0.2 [50%]
+- [X] Run the psci command from the folder containing the .psci file
+- [X] Improve the modules (re)loading by removing existing files (.psci_modules/node_modules folder)
+- [ ] Improve the module (re)loading by removing existings files (insid .psci_modules folder)
 - [ ] Ensure completion works (as in a cli)
-* TODO 0.0.2 [%]
+* TODO 0.0.3 [%]
 - [ ] Add to melpa
 - [ ] Add to marmalade
 - [ ] Add to el-get

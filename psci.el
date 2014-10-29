@@ -5,7 +5,7 @@
 ;; Author: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Maintainer: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Version: 0.0.1
-;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0") (projectile "0.11.0") (s "1.9.0") (f "0.17.1"))
+;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0") (projectile "0.11.0") (s "1.9.0") (f "0.17.1") (deferred "0.3.2"))
 ;; Keywords: purescript psci repl major mode
 ;; URL: https://github.com/ardumont/emacs-psci
 
@@ -46,6 +46,7 @@
 (require 'projectile)
 (require 's)
 (require 'f)
+(require 'deferred)
 
 (defvar psci/buffer-name "psci"
   "Buffer name of the psci buffer.")
@@ -162,36 +163,46 @@ When FILENAME is nil or not a real file, returns nil."
     (-repeat it sym)
     (s-join "" it)))
 
-(defun psci/--compute-relative-path (directory file-name)
-  "Compute the relative path between the DIRECTORY and the FILE-NAME."
-  (->> directory
-    (f-relative file-name)
-    f-split
-    length
-    1-
-    (psci/--symbol "../")))
+(defun psci/--project-psci-file (project-root-folder)
+  "Compute the project's psci file from the PROJECT-ROOT-FOLDER.
+Returns nil if no .psci file is found."
+  (let ((psci-module-file (expand-file-name psci/project-module-file project-root-folder)))
+    (when (file-exists-p psci-module-file)
+      psci-module-file)))
 
 (defun psci/--project-module-files! ()
-  "Compulse the list of modules for the current project."
+  "Compulse the list of modules for the current project.
+Assumes the location of the modules is the project root folder."
   (let* ((parent-root-folder (projectile-project-root))
-         (relative-path      (psci/--compute-relative-path (projectile-project-root) buffer-file-name)))
-    (-when-let (psci-module-file (expand-file-name psci/project-module-file parent-root-folder))
-      (when (file-exists-p psci-module-file)
-        (->> psci-module-file
-          psci/--file-content
-          (s-split "\n")
-          (--map (s-concat relative-path (cadr (s-split ":m " it))))
-          (-filter 'file-exists-p)
-          nreverse)))))
+         (psci-module-file   (psci/--project-psci-file parent-root-folder)))
+    (when psci-module-file
+      (->> psci-module-file
+        psci/--file-content
+        (s-split "\n")
+        (--map (s-concat "./" (cadr (s-split ":m " it))))
+        (-filter 'file-exists-p)
+        nreverse))))
+
+(defvar psci/--modules-folder ".psci_modules"
+  "The modules folder psci uses as cache.")
+
+(defun psci/--compute-modules-folder (project-root-folder)
+  "Compute the psci modules folder from PROJECT-ROOT-FOLDER."
+  (concat project-root-folder psci/--modules-folder))
 
 ;;;###autoload
 (defun psci/load-project-modules! ()
   "Load the modules needed for the repl session.
 We chose to load the .psci file's content (the purescript doc proposes its use)."
   (interactive)
-  (-when-let (modules (psci/--project-module-files!))
-    (call-interactively 'psci/reset!)
-    (mapc #'psci/--load-file! modules)))
+  (lexical-let ((archive-folder (psci/--compute-modules-folder (projectile-project-root))))
+    (deferred:$
+      (deferred:process-shell (format "rm -rf %s/node_modules/*" archive-folder)) ;; clean compiled version
+      (deferred:nextc it (lambda () (call-interactively 'psci/reset!)))                ;; flush in-memory version
+      (deferred:nextc it                                                          ;; at last reload all files
+        (lambda ()
+          (-when-let (modules (psci/--project-module-files!))
+            (mapc #'psci/--load-file! modules)))))))
 
 ;;;###autoload
 (defun psci/reset! ()
