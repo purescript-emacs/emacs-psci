@@ -83,6 +83,7 @@
        (current-buffer)))
     ;; create the comint process if there is no buffer.
     (unless buffer
+      (setq-local default-directory (projectile-project-root))
       (apply 'make-comint-in-buffer psci/buffer-name buffer
              psci-program psci/arguments)
       (psci-mode))))
