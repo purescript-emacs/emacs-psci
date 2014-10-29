@@ -70,7 +70,7 @@
   "Basic mode map for `psci'.")
 
 (defun psci/send-input (&optional no-newline artificial)
-  "Send input.
+  "Send input and force the eof signal.
 NO-NEWLINE and ARTIFICIAL are optional.
 See `'comint-send-input`' for more information."
   (interactive)
