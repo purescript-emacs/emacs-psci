@@ -32,15 +32,68 @@ How about now?
 
 * Install
 
-As soon as something is working, I intend to release on melpa/melpa-stable/marmalade.
+Many different installation possible:
 
-For the moment, clone the repository, and:
+** Git
+
+Clone the repository, and:
+
 #+begin_src sh
 M-x package-install-file RET /path/to/emacs-psci/psci.el
 #+end_src
 
 *Note* Provided you already use melpa, the needed deps should be installed.
 
+** Package repositories
+*** Melpa
+
+[[http://melpa.org/#/getting-started][Their good documentation:]]
+
+#+begin_src emacs-lisp
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages") t)
+(package-initialize)
+#+end_src
+
+*Note* Providing [[https://github.com/milkypostman/melpa/pull/2124][PR]] is merged.
+
+*** Melpa-stable
+
+[[http://stable.melpa.org/#/getting-started][Their good documentation:]]
+
+#+begin_src emacs-lisp
+(require 'package)
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t
+(package-initialize)
+#+end_src
+
+*** Marmalade
+
+[[https://marmalade-repo.org/#download][Their good documentation:]]
+
+#+begin_src emacs-lisp
+(require 'package)
+(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
+(package-initialize)
+#+end_src
+
+*** Install
+
+With melpa, melpa-stable, marmalade:
+
+#+begin_src sh
+M-x package-install RET psci RET
+#+end_src
+
+** el-get
+
+#+begin_src sh
+M-x el-get-install RET psci RET
+#+end_src
+
+*Note* Providing [[https://github.com/dimitri/el-get/pull/1973][PR]] is merged.
+
+* Setup
 ** Start
 
 #+begin_src sh
