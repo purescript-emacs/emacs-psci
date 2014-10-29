@@ -91,7 +91,7 @@
        (current-buffer)))
     ;; create the comint process if there is no buffer.
     (unless buffer
-      (set (make-local-variable 'default-directory) (psci/--project-root!))
+      (setq default-directory (psci/--project-root!))
       (apply 'make-comint-in-buffer psci/buffer-name buffer
              psci-program psci/arguments)
       (psci-mode))))
