@@ -5,7 +5,7 @@
 ;; Author: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Maintainer: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Version: 0.0.4
-;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0") (projectile "0.11.0") (s "1.9.0") (f "0.17.1") (deferred "0.3.2"))
+;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0") (s "1.9.0") (f "0.17.1") (deferred "0.3.2"))
 ;; Keywords: purescript psci repl major mode
 ;; URL: https://github.com/ardumont/emacs-psci
 
@@ -43,7 +43,6 @@
 (require 'comint)
 (require 'dash)
 (require 'purescript-mode)
-(require 'projectile)
 (require 's)
 (require 'f)
 (require 'deferred)
@@ -92,7 +91,7 @@
        (current-buffer)))
     ;; create the comint process if there is no buffer.
     (unless buffer
-      (setq-local default-directory (projectile-project-root))
+      (set (make-local-variable 'default-directory) (psci/--project-root!))
       (apply 'make-comint-in-buffer psci/buffer-name buffer
              psci-program psci/arguments)
       (psci-mode))))
@@ -137,7 +136,7 @@
 (defun psci/load-current-file! ()
   "Load the current file in the psci repl."
   (interactive)
-  (lexical-let ((archive-folder (psci/--compute-modules-folder (projectile-project-root)))
+  (lexical-let ((archive-folder (psci/--compute-modules-folder (psci/--project-root!)))
                 (module-name    (psci/--compute-module-name!)))
     (when module-name
       (deferred:$
@@ -188,7 +187,7 @@ Returns nil if no .psci file is found."
 (defun psci/--project-module-files! ()
   "Compulse the list of modules for the current project.
 Assumes the location of the modules is the project root folder."
-  (let* ((parent-root-folder (projectile-project-root))
+  (let* ((parent-root-folder (psci/--project-root!))
          (psci-module-file   (psci/--project-psci-file parent-root-folder)))
     (when psci-module-file
       (->> psci-module-file
@@ -210,7 +209,7 @@ Assumes the location of the modules is the project root folder."
   "Load the modules needed for the repl session.
 We chose to load the .psci file's content (the purescript doc proposes its use)."
   (interactive)
-  (lexical-let ((archive-folder (psci/--compute-modules-folder (projectile-project-root))))
+  (lexical-let ((archive-folder (psci/--compute-modules-folder (psci/--project-root!))))
     (deferred:$
       (deferred:process-shell "rm -rf " (shell-quote-argument (format "%s/node_modules/*" archive-folder))) ;; clean compiled version
       (deferred:nextc it (lambda () (call-interactively 'psci/reset!)))                                         ;; flush in-memory version
@@ -224,6 +223,12 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
   "Reset the current status of the repl session."
   (interactive)
   (psci/--run-psci-command! ":r"))
+
+(defun psci/--project-root! ()
+  "Determine the project's root folder."
+  (->> psci/project-module-file
+    (locate-dominating-file default-directory)
+    expand-file-name))
 
 ;; Add some default bindings
 (add-hook 'purescript-mode-hook (lambda ()
