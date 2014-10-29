@@ -230,11 +230,26 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
     (locate-dominating-file default-directory)
     expand-file-name))
 
-;; Add some default bindings
-(add-hook 'purescript-mode-hook (lambda ()
-                                  (define-key purescript-mode-map (kbd "C-c C-l") 'psci/load-current-file!)
-                                  (define-key purescript-mode-map (kbd "C-c C-r") 'psci/load-project-modules!)
-                                  (define-key purescript-mode-map (kbd "C-c M-n") 'psci/load-module!)))
+(defvar inferior-psci-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-l") 'psci/load-current-file!)
+    (define-key map (kbd "C-c C-r") 'psci/load-project-modules!)
+    (define-key map (kbd "C-c M-n") 'psci/load-module!)
+    map)
+  "Basic mode map for `inferior-psci-mode'.")
+
+(defgroup psci nil " psci customisation group."
+  :tag "psci"
+  :version "0.0.4")
+
+;;;###autoload
+(define-minor-mode inferior-psci-mode "Extend the bindings ."
+  :lighter " ip"
+  :keymap inferior-psci-mode-map
+  :group 'psci)
+
+;; Add some default bindings through hook customisation
+;; (add-hook 'purescript-mode-hook 'inferior-psci-mode)
 
 (provide 'psci)
 ;;; psci.el ends here
