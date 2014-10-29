@@ -117,16 +117,6 @@ See `'comint-send-input`' for more information."
   (setq-local comment-start "-- ")
   (setq-local comment-use-syntax t))
 
-(defun psci/--run-psci-string! (command)
-  "Run purescript code COMMAND as string."
-  (let ((process (get-buffer-process (psci/process-name psci/buffer-name))))
-    (comint-send-string process (format "%s\n" command))
-    (process-send-eof process)))
-
-(defun psci/--run-psci-region! (region-start region-end)
-  "Run purescript code between REGION-START and REGION-END."
-  (let ((process (get-buffer-process (psci/process-name psci/buffer-name))))
-    (comint-send-region process region-start region-end)
 ;; ELISP> (with-current-buffer "*psci*"
 ;;          (psci/--debug-setup!))
 ;; ("comint-prompt-regexp" "^> "
@@ -156,11 +146,16 @@ See `'comint-send-input`' for more information."
         "font-lock-defaults" font-lock-defaults
         "comment-start" comment-start
         "comment-use-syntax" comment-use-syntax))
+
+(defun psci/--run-psci-command! (command)
+  "Run psci COMMAND as string."
+  (-when-let (process (get-buffer-process (psci/process-name psci/buffer-name)))
+    (comint-simple-send process command)
     (process-send-eof process)))
 
 (defun psci/--load-file! (filename)
   "Load the purescript FILENAME inside the current running session."
-  (psci/--run-psci-string! (format ":m %s" filename)))
+  (psci/--run-psci-command! (format ":m %s" filename)))
 
 ;;;###autoload
 (defun psci/load-current-file! ()
@@ -181,7 +176,7 @@ See `'comint-send-input`' for more information."
   "Load the module inside the repl session."
   (interactive)
   (-when-let (module-name (psci/--compute-module-name!))
-    (psci/--run-psci-string! (format ":i %s" module-name))))
+    (psci/--run-psci-command! (format ":i %s" module-name))))
 
 (defvar psci/project-module-file ".psci"
   "The default file referencing the purescript modules to load at psci startup.")
@@ -233,7 +228,7 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
 (defun psci/reset! ()
   "Reset the current status of the repl session."
   (interactive)
-  (psci/--run-psci-string! ":r"))
+  (psci/--run-psci-command! ":r"))
 
 ;; Add some default bindings
 (add-hook 'purescript-mode-hook (lambda ()
