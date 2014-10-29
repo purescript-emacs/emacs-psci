@@ -148,10 +148,12 @@
   "The default file referencing the purescript modules to load at psci startup.")
 
 (defun psci/--file-content (filename)
-  "Load the FILENAME's content as a string."
-  (with-temp-buffer
-    (insert-file-contents filename)
-    (buffer-substring-no-properties (point-min) (point-max))))
+  "Load the FILENAME's content as a string.
+When FILENAME is nil or not a real file, returns nil."
+  (when (and filename (file-exists-p filename))
+    (with-temp-buffer
+      (insert-file-contents filename)
+      (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defun psci/--symbol (sym n)
   "Compute the repetition of a symbol SYM N times as a string."
