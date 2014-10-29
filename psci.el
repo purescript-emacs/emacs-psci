@@ -98,11 +98,6 @@ See `'comint-send-input`' for more information."
              psci-program psci/arguments)
       (psci-mode))))
 
-(defun psci/--initialize ()
-  "Helper function to initialize psci."
-  (setq comint-process-echoes t)
-  (setq comint-use-prompt-regexp t))
-
 ;;;###autoload
 (define-derived-mode psci-mode comint-mode "psci"
   "Major mode for `run-psci'.
@@ -125,9 +120,6 @@ See `'comint-send-input`' for more information."
   (set (make-local-variable 'font-lock-defaults) '(purescript-font-lock-keywords t))
   (setq-local comment-start "-- ")
   (setq-local comment-use-syntax t))
-
-;; this has to be done in a hook. grumble grumble.
-(add-hook 'psci-mode-hook 'psci/--initialize)
 
 (defun psci/--run-psci-string! (command)
   "Run purescript code COMMAND as string."
