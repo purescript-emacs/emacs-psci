@@ -47,7 +47,7 @@ M-x package-install-file RET /path/to/emacs-psci/psci.el
 ** Package repositories
 *** Melpa
 
-[[http://melpa.org/#/getting-started][Their good documentation:]]
+[[http://melpa.org/#/getting-started][Their documentation:]]
 
 #+begin_src emacs-lisp
 (require 'package)
@@ -59,7 +59,7 @@ M-x package-install-file RET /path/to/emacs-psci/psci.el
 
 *** Melpa-stable
 
-[[http://stable.melpa.org/#/getting-started][Their good documentation:]]
+[[http://stable.melpa.org/#/getting-started][Their documentation:]]
 
 #+begin_src emacs-lisp
 (require 'package)
@@ -69,7 +69,7 @@ M-x package-install-file RET /path/to/emacs-psci/psci.el
 
 *** Marmalade
 
-[[https://marmalade-repo.org/#download][Their good documentation:]]
+[[https://marmalade-repo.org/#download][Their documentation:]]
 
 #+begin_src emacs-lisp
 (require 'package)
@@ -86,6 +86,8 @@ M-x package-install RET psci RET
 #+end_src
 
 ** el-get
+
+[[https://github.com/dimitri/el-get][Their documentation:]]
 
 #+begin_src sh
 M-x el-get-install RET psci RET
@@ -117,15 +119,15 @@ This permits, using the same universal binding `C-c C-z`, to go back and forth b
 
 Default bindings for this mode:
 
-|--------------------+-------------------------------------------+----------------------------------------------------------------------------------------------|
-| Keybindings        | Interactive commands                      | Description                                                                                  |
-|--------------------+-------------------------------------------+----------------------------------------------------------------------------------------------|
-| <kbd>C-c C-l</kbd> | <kbd>M-x psci/load-current-file!</kbd>    | Equivalent of `:m /path/to/current/module/file.purs`                                         |
-| <kbd>C-c M-n</kbd> | <kbd>M-x psci/load-module!</kbd>          | Equivalent of `:i your.current.module.name`                                                  |
-| <kbd>C-c C-r</kbd> | <kbd>M-x psci/load-project-modules!</kbd> | Load or reload modules defined in your project file .psci                                    |
-| N/A                | <kbd>M-x psci/reset!</kbd>                | Equivalent of :r                                                                             |
-| <kbd>C-c C-z</kbd> |                                           | Provided you use the previous setup, this will switch back and forth between repl and buffer |
-|--------------------+-------------------------------------------+----------------------------------------------------------------------------------------------|
+|-------------+--------------------------------+----------------------------------------------------------------------------------------------|
+| Keybindings | Interactive commands           | Description                                                                                  |
+|-------------+--------------------------------+----------------------------------------------------------------------------------------------|
+| C-c C-l     | M-x psci/load-current-file!    | Equivalent of `:m /path/to/current/module/file.purs`                                         |
+| C-c M-n     | M-x psci/load-module!          | Equivalent of `:i your.current.module.name`                                                  |
+| C-c C-r     | M-x psci/load-project-modules! | Load or reload modules defined in your project file .psci                                    |
+| N/A         | M-x psci/reset!                | Equivalent of `:r`                                                                           |
+| C-c C-z     |                                | Provided you use the previous setup, this will switch back and forth between repl and buffer |
+|-------------+--------------------------------+----------------------------------------------------------------------------------------------|
 
 * Runtime dependencies
 
