@@ -20,9 +20,9 @@ CLOSED: [2014-10-29 Wed 18:03]
 - [X] Improve the modules (re)loading by removing existing files (.psci_modules/node_modules folder)
 - [X] Improve the module (re)loading by removing existings files (inside .psci_modules folder)
 - [X] Create melpa recipe https://github.com/ardumont/melpa/blob/add-new-recipe-psci/recipes/psci
-* IN-PROGRESS 0.0.3 [80%]
+* IN-PROGRESS 0.0.3 [100%]
 - [X] Update version
 - [X] Add to marmalade - https://marmalade-repo.org/packages/psci
 - [X] Add to el-get - https://github.com/ardumont/el-get/blob/add-psci-recipe/recipes/psci.rcp
 - [X] Update documentation regarding installation steps
-- [ ] Update documentation regarding how to use it
+- [X] Update documentation regarding usage
