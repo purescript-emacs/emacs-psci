@@ -51,6 +51,14 @@
 (defvar psci/buffer-name "psci"
   "Buffer name of the psci buffer.")
 
+(defconst *psci/version* "0.0.4" "The version of psci.")
+
+;;;###autoload
+(defun psci/version ()
+  "Display the version of the mode."
+  (interactive)
+  (message "psci-mode version - %s" *psci/version*))
+
 (defun psci/process-name (buffer-name)
   "Compute the buffer's process name based on BUFFER-NAME."
   (format "*%s*" buffer-name))
