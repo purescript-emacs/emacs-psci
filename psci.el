@@ -38,8 +38,8 @@
 ;; to purescript-mode:
 ;; (add-hook 'purescript-mode-hook 'inferior-psci-mode)
 
-;; To activate psci directly from a purescript-mode buffer, you
-;; could use repl-toggle (available on melpa):
+;; To come back and forth between a purescript-mode buffer and
+;; repl, you could use repl-toggle (available on melpa):
 ;; (require 'repl-toggle)
 ;; (add-to-list 'rtog/mode-repl-alist '(purescript-mode . psci))
 

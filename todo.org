@@ -1,8 +1,9 @@
 #+title: backlog
 #+author: ardumont
 
-* IN-PROGRESS 0.0.5 [16%]
+* IN-PROGRESS 0.0.5 [28%]
 - [X] Prepare backlog
+- [X] Improve mode description header
 - [ ] Update version
 - [ ] Add quit session
 - [ ] Reorganize code for a better readability
