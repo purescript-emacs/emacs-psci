@@ -224,6 +224,12 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
   (interactive)
   (psci/--run-psci-command! ":r"))
 
+;;;###autoload
+(defun psci/quit! ()
+  "Quit the psci session."
+  (interactive)
+  (psci/--run-psci-command! ":q"))
+
 (defvar inferior-psci-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-l") 'psci/load-current-file!)

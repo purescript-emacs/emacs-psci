@@ -1,18 +1,17 @@
 #+title: backlog
 #+author: ardumont
 
-* IN-PROGRESS 0.0.5 [50%]
+* IN-PROGRESS 0.0.5 [83%]
 - [X] Prepare backlog
 - [X] Improve mode description header
 - [X] Update version
-- [-] Reorganize code for a better readability
+- [X] Reorganize code for a better readability
   - [X] Reorganize var at the beginning of the buffer
   - [X] Add missing autoload property on psci function
   - [X] Remove dead code
   - [X] Reorganize private functions at the beginning of the buffer
   - [X] Improve psci minor mode's dosctring description
-  - [ ] Rename functions according to fully compliant emacs conventions?
-- [ ] Add quit session command
+- [X] Add quit session command
 - [ ] Make psci's default completion work
 * DONE 0.0.4 [100%]
 CLOSED: [2014-10-29 Wed 20:08]
