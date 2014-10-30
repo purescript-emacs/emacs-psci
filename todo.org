@@ -4,7 +4,8 @@
 * TODO 0.0.6 [0%]
 - [ ] Update version
 - [ ] Make psci's default completion work
-* IN-PROGRESS 0.0.5 [85%]
+* DONE 0.0.5 [100%]
+CLOSED: [2014-10-30 Thu 18:17]
 - [X] Prepare backlog
 - [X] Improve mode description header
 - [X] Update version
