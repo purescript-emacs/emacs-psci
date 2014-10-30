@@ -1,4 +1,4 @@
-#+title: psci-mode
+#+title: psci-mode [[http://melpa.org/#/psci][file:http://melpa.org/packages/psci-badge.svg]] [[http://stable.melpa.org/#/psci][file:http://stable.melpa.org/packages/psci-badge.svg]]
 #+author: ardumont
 
 A major mode to try and improve the purescript repl experience within emacs.
