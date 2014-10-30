@@ -55,6 +55,8 @@
 (require 'f)
 (require 'deferred)
 
+;; constants or variables
+
 (defvar psci/buffer-name "psci"
   "Buffer name of the psci buffer.")
 
@@ -73,6 +75,8 @@
 (defvar psci/--modules-folder ".psci_modules"
   "The modules folder psci uses as cache.")
 
+;; private functions
+
 (defun psci/--project-root! ()
   "Determine the project's root folder."
   (->> psci/project-module-file
@@ -82,6 +86,58 @@
 (defun psci/--process-name (buffer-name)
   "Compute the buffer's process name based on BUFFER-NAME."
   (format "*%s*" buffer-name))
+
+(defun psci/--file-content (filename)
+  "Load the FILENAME's content as a string.
+When FILENAME is nil or not a real file, returns nil."
+  (when (and filename (file-exists-p filename))
+    (with-temp-buffer
+      (insert-file-contents filename)
+      (buffer-substring-no-properties (point-min) (point-max)))))
+
+(defun psci/--project-psci-file (project-root-folder)
+  "Compute the project's psci file from the PROJECT-ROOT-FOLDER.
+Returns nil if no .psci file is found."
+  (let ((psci-module-file (expand-file-name psci/project-module-file project-root-folder)))
+    (when (file-exists-p psci-module-file)
+      psci-module-file)))
+
+(defun psci/--project-module-files! ()
+  "Compulse the list of modules for the current project.
+Assumes the location of the modules is the project root folder."
+  (let* ((parent-root-folder (psci/--project-root!))
+         (psci-module-file   (psci/--project-psci-file parent-root-folder)))
+    (when psci-module-file
+      (->> psci-module-file
+        psci/--file-content
+        (s-split "\n")
+        (--map (s-concat "./" (cadr (s-split ":m " it))))
+        (-filter 'file-exists-p)
+        nreverse))))
+
+(defun psci/--compute-modules-folder (project-root-folder)
+  "Compute the psci modules folder from PROJECT-ROOT-FOLDER."
+  (concat project-root-folder psci/--modules-folder))
+
+(defun psci/--run-psci-command! (command)
+  "Run psci COMMAND as string."
+  (-when-let (process (get-buffer-process (psci/--process-name psci/buffer-name)))
+    (comint-simple-send process command)
+    (process-send-eof process)))
+
+(defun psci/--load-file! (filename)
+  "Load the purescript FILENAME inside the current running session."
+  (psci/--run-psci-command! (format ":m %s" filename)))
+
+(defun psci/--compute-module-name! ()
+  "Compute the current file's module name."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((regexp "^module \\\([a-zA-Z0-9\\\.]+\\\) "))
+      (search-forward-regexp regexp)
+      (match-string 1))))
+
+;; public functions
 
 ;;;###autoload
 (defun psci ()
@@ -128,16 +184,6 @@
   (set (make-local-variable 'comment-start) "-- ")
   (set (make-local-variable 'comment-use-syntax) t))
 
-(defun psci/--run-psci-command! (command)
-  "Run psci COMMAND as string."
-  (-when-let (process (get-buffer-process (psci/--process-name psci/buffer-name)))
-    (comint-simple-send process command)
-    (process-send-eof process)))
-
-(defun psci/--load-file! (filename)
-  "Load the purescript FILENAME inside the current running session."
-  (psci/--run-psci-command! (format ":m %s" filename)))
-
 ;;;###autoload
 (defun psci/load-current-file! ()
   "Load the current file in the psci repl."
@@ -151,52 +197,12 @@
           (lambda ()
             (call-interactively 'psci/reset!)))))))
 
-(defun psci/--compute-module-name! ()
-  "Compute the current file's module name."
-  (save-excursion
-    (goto-char (point-min))
-    (let ((regexp "^module \\\([a-zA-Z0-9\\\.]+\\\) "))
-      (search-forward-regexp regexp)
-      (match-string 1))))
-
 ;;;###autoload
 (defun psci/load-module! ()
   "Load the module inside the repl session."
   (interactive)
   (-when-let (module-name (psci/--compute-module-name!))
     (psci/--run-psci-command! (format ":i %s" module-name))))
-
-(defun psci/--file-content (filename)
-  "Load the FILENAME's content as a string.
-When FILENAME is nil or not a real file, returns nil."
-  (when (and filename (file-exists-p filename))
-    (with-temp-buffer
-      (insert-file-contents filename)
-      (buffer-substring-no-properties (point-min) (point-max)))))
-
-(defun psci/--project-psci-file (project-root-folder)
-  "Compute the project's psci file from the PROJECT-ROOT-FOLDER.
-Returns nil if no .psci file is found."
-  (let ((psci-module-file (expand-file-name psci/project-module-file project-root-folder)))
-    (when (file-exists-p psci-module-file)
-      psci-module-file)))
-
-(defun psci/--project-module-files! ()
-  "Compulse the list of modules for the current project.
-Assumes the location of the modules is the project root folder."
-  (let* ((parent-root-folder (psci/--project-root!))
-         (psci-module-file   (psci/--project-psci-file parent-root-folder)))
-    (when psci-module-file
-      (->> psci-module-file
-        psci/--file-content
-        (s-split "\n")
-        (--map (s-concat "./" (cadr (s-split ":m " it))))
-        (-filter 'file-exists-p)
-        nreverse))))
-
-(defun psci/--compute-modules-folder (project-root-folder)
-  "Compute the psci modules folder from PROJECT-ROOT-FOLDER."
-  (concat project-root-folder psci/--modules-folder))
 
 ;;;###autoload
 (defun psci/load-project-modules! ()
