@@ -239,7 +239,7 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
   :prefix "psci/")
 
 ;;;###autoload
-(define-minor-mode inferior-psci-mode "Extend the bindings ."
+(define-minor-mode inferior-psci-mode "psci minor mode to define default bindings."
   :lighter " ip"
   :keymap inferior-psci-mode-map
   :group 'psci)
