@@ -83,6 +83,7 @@
   "Compute the buffer's process name based on BUFFER-NAME."
   (format "*%s*" buffer-name))
 
+;;;###autoload
 (defun psci ()
   "Run an inferior instance of `psci' inside Emacs."
   (interactive)

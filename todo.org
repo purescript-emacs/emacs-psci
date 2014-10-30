@@ -7,7 +7,7 @@
 - [X] Update version
 - [-] Reorganize code for a better readability
   - [X] Reorganize var at the beginning of the buffer
-  - [ ] Add missing autoload property on psci function
+  - [X] Add missing autoload property on psci function
   - [ ] Reorganize private functions at the beginning of the buffer
   - [ ] Rename functions according to fully compliant emacs conventions?
 - [ ] Add quit session command
