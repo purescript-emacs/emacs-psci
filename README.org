@@ -134,6 +134,7 @@ Default bindings available from a purescript buffer:
 | C-c M-n     | M-x psci/load-module!          | Equivalent of `:i your.current.module.name` - Import <module> for use in PSCI                |
 | C-c C-r     | M-x psci/load-project-modules! | Load or reload files defined in the project file .psci                                       |
 | N/A         | M-x psci/reset!                | Equivalent of `:r` - Reset                                                                   |
+| N/A         | M-x psci/quit!                 | Equivalent of `:q` - Quit                                                                    |
 | C-c C-z     |                                | Provided you use the previous setup, this will switch back and forth between repl and buffer |
 |-------------+--------------------------------+----------------------------------------------------------------------------------------------|
 

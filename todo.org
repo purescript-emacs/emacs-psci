@@ -1,7 +1,10 @@
 #+title: backlog
 #+author: ardumont
 
-* IN-PROGRESS 0.0.5 [83%]
+* TODO 0.0.6 [0%]
+- [ ] Update version
+- [ ] Make psci's default completion work
+* IN-PROGRESS 0.0.5 [85%]
 - [X] Prepare backlog
 - [X] Improve mode description header
 - [X] Update version
@@ -12,7 +15,7 @@
   - [X] Reorganize private functions at the beginning of the buffer
   - [X] Improve psci minor mode's dosctring description
 - [X] Add quit session command
-- [ ] Make psci's default completion work
+- [X] Update documentation about quit command
 * DONE 0.0.4 [100%]
 CLOSED: [2014-10-29 Wed 20:08]
 - [X] Update version
