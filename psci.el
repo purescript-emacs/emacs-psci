@@ -58,24 +58,30 @@
 (defvar psci/buffer-name "psci"
   "Buffer name of the psci buffer.")
 
-(defun psci/process-name (buffer-name)
-  "Compute the buffer's process name based on BUFFER-NAME."
-  (format "*%s*" buffer-name))
-
 (defvar psci/file-path "psci"
   "Path to the program used by `psci' function.")
 
 (defvar psci/arguments '()
   "Commandline arguments to pass to `psci' function.")
 
-(defvar psci-mode-map
-  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
-    (define-key map "\t" 'completion-at-point)
-    map)
-  "Basic mode map for `psci'.")
-
 (defvar psci/prompt "> "
   "The psci prompt.")
+
+(defvar psci/project-module-file ".psci"
+  "The default file referencing the purescript modules to load at psci startup.")
+
+(defvar psci/--modules-folder ".psci_modules"
+  "The modules folder psci uses as cache.")
+
+(defun psci/--project-root! ()
+  "Determine the project's root folder."
+  (->> psci/project-module-file
+    (locate-dominating-file default-directory)
+    expand-file-name))
+
+(defun psci/--process-name (buffer-name)
+  "Compute the buffer's process name based on BUFFER-NAME."
+  (format "*%s*" buffer-name))
 
 (defun psci ()
   "Run an inferior instance of `psci' inside Emacs."
@@ -87,7 +93,7 @@
     (pop-to-buffer-same-window
      (if (or buffer (not (derived-mode-p 'psci-mode))
              (comint-check-proc (current-buffer)))
-         (get-buffer-create (or buffer (psci/process-name psci/buffer-name)))
+         (get-buffer-create (or buffer (psci/--process-name psci/buffer-name)))
        (current-buffer)))
     ;; create the comint process if there is no buffer.
     (unless buffer
@@ -95,6 +101,12 @@
       (apply 'make-comint-in-buffer psci/buffer-name buffer
              psci-program psci/arguments)
       (psci-mode))))
+
+(defvar psci-mode-map
+  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
+    (define-key map "\t" 'completion-at-point)
+    map)
+  "Basic mode map for `psci'.")
 
 ;;;###autoload
 (define-derived-mode psci-mode comint-mode "psci"
@@ -117,14 +129,14 @@
 
 (defun psci/--run-psci-command! (command)
   "Run psci COMMAND as string."
-  (-when-let (process (get-buffer-process (psci/process-name psci/buffer-name)))
+  (-when-let (process (get-buffer-process (psci/--process-name psci/buffer-name)))
     (comint-simple-send process command)
     (process-send-eof process)))
 
 ;; (defun psci/load-region! (region-start region-end)
 ;;   "Run purescript code between REGION-START and REGION-END."
 ;;   (interactive "r")
-;;   (-when-let (process (get-buffer-process (psci/process-name psci/buffer-name)))
+;;   (-when-let (process (get-buffer-process (psci/--process-name psci/buffer-name)))
 ;;     (comint-send-region process region-start region-end)
 ;;     (process-send-eof process)))
 
@@ -160,9 +172,6 @@
   (-when-let (module-name (psci/--compute-module-name!))
     (psci/--run-psci-command! (format ":i %s" module-name))))
 
-(defvar psci/project-module-file ".psci"
-  "The default file referencing the purescript modules to load at psci startup.")
-
 (defun psci/--file-content (filename)
   "Load the FILENAME's content as a string.
 When FILENAME is nil or not a real file, returns nil."
@@ -197,9 +206,6 @@ Assumes the location of the modules is the project root folder."
         (-filter 'file-exists-p)
         nreverse))))
 
-(defvar psci/--modules-folder ".psci_modules"
-  "The modules folder psci uses as cache.")
-
 (defun psci/--compute-modules-folder (project-root-folder)
   "Compute the psci modules folder from PROJECT-ROOT-FOLDER."
   (concat project-root-folder psci/--modules-folder))
@@ -223,12 +229,6 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
   "Reset the current status of the repl session."
   (interactive)
   (psci/--run-psci-command! ":r"))
-
-(defun psci/--project-root! ()
-  "Determine the project's root folder."
-  (->> psci/project-module-file
-    (locate-dominating-file default-directory)
-    expand-file-name))
 
 (defvar inferior-psci-mode-map
   (let ((map (make-sparse-keymap)))
