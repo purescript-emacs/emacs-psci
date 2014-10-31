@@ -1,9 +1,13 @@
 #+title: backlog
 #+author: ardumont
 
-* TODO 0.0.6 [0%]
+* IN-PROGRESS 0.0.6 [16%]
+- [X] Prepare backlog
 - [ ] Update version
 - [ ] Make psci's default completion work
+- [ ] Add :b binding
+- [ ] Add `:s import` binding
+- [ ] Add `:s loaded` binding
 * DONE 0.0.5 [100%]
 CLOSED: [2014-10-30 Thu 18:17]
 - [X] Prepare backlog
