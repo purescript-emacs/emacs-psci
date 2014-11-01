@@ -1,9 +1,10 @@
 #+title: backlog
 #+author: ardumont
 
-* IN-PROGRESS 0.0.6 [33%]
+* IN-PROGRESS 0.0.6 [42%]
 - [X] Prepare backlog
 - [X] Update version
+- [X] Add TOC to the README.org (Cheers to org-toc!)
 - [ ] Add :b binding
 - [ ] Add `:s import` binding
 - [ ] Add `:s loaded` binding
