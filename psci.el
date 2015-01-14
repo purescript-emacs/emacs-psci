@@ -138,7 +138,7 @@ Assumes the location of the modules is the project root folder."
   "Compute the current file's module name."
   (save-excursion
     (goto-char (point-min))
-    (let ((regexp "^module \\\([a-zA-Z0-9\\\.]+\\\) "))
+    (let ((regexp "^module\\s-+\\\([a-zA-Z0-9\\\.]+\\\)\\b"))
       (search-forward-regexp regexp)
       (match-string 1))))
 
