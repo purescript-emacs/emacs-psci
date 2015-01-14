@@ -3,6 +3,27 @@
 
 A major mode to try and improve the purescript repl experience within emacs.
 
+* TOC                                                                   :TOC:
+ - [[#description][Description]]
+     - [[#what][What]]
+     - [[#how][How]]
+     - [[#why][Why]]
+     - [[#when][When]]
+     - [[#who][Who]]
+ - [[#install][Install]]
+     - [[#git][Git]]
+     - [[#package-repositories][Package repositories]]
+     - [[#el-get][el-get]]
+ - [[#start-and-setup][Start and setup]]
+     - [[#start][Start]]
+     - [[#setup][Setup]]
+ - [[#use][Use]]
+ - [[#runtime-dependencies][Runtime dependencies]]
+ - [[#contributions][Contributions]]
+     - [[#pr][PR]]
+     - [[#issues][Issues]]
+ - [[#miscellaneous][Miscellaneous]]
+
 * Description
 ** What
 

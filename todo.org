@@ -1,9 +1,18 @@
 #+title: backlog
 #+author: ardumont
 
-* TODO 0.0.6 [0%]
-- [ ] Update version
+* 0.0.7 [%]
+- [ ] Add :b binding
+- [ ] Add `:s import` binding
+- [ ] Add `:s loaded` binding
 - [ ] Make psci's default completion work
+* DONE 0.0.6 [100%]
+CLOSED: [2015-01-14 Wed 09:03]
+- [X] Prepare backlog
+- [X] Update version
+- [X] Add TOC to the README.org (Cheers to org-toc!)
+- [X] `M-x psci` errors if there is no .psci file. - CLOSE #3
+- [X] Need better regex for `psci/--compute-module-name!` - CLOSE #4
 * DONE 0.0.5 [100%]
 CLOSED: [2014-10-30 Thu 18:17]
 - [X] Prepare backlog

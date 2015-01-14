@@ -4,7 +4,7 @@
 
 ;; Author: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Maintainer: Antoine R. Dumont <eniotna.t AT gmail.com>
-;; Version: 0.0.5
+;; Version: 0.0.6
 ;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0") (s "1.9.0") (f "0.17.1") (deferred "0.3.2"))
 ;; Keywords: purescript psci repl major mode
 ;; URL: https://github.com/ardumont/emacs-psci
@@ -77,11 +77,16 @@
 
 ;; private functions
 
+(defun psci/log (msg)
+  "Log MSG for psci."
+  (message (format "psci - %s" msg)))
+
 (defun psci/--project-root! ()
-  "Determine the project's root folder."
-  (->> psci/project-module-file
-    (locate-dominating-file default-directory)
-    expand-file-name))
+  "Determine the project's root folder.
+Beware, can return nil if no .psci file is found."
+  (-when-let (project-root (->> psci/project-module-file
+                                (locate-dominating-file default-directory)))
+    (expand-file-name project-root)))
 
 (defun psci/--process-name (buffer-name)
   "Compute the buffer's process name based on BUFFER-NAME."
@@ -133,7 +138,7 @@ Assumes the location of the modules is the project root folder."
   "Compute the current file's module name."
   (save-excursion
     (goto-char (point-min))
-    (let ((regexp "^module \\\([a-zA-Z0-9\\\.]+\\\) "))
+    (let ((regexp "^module\\s-+\\\([a-zA-Z0-9\\\.]+\\\)\\b"))
       (search-forward-regexp regexp)
       (match-string 1))))
 
@@ -141,23 +146,26 @@ Assumes the location of the modules is the project root folder."
 
 ;;;###autoload
 (defun psci ()
-  "Run an inferior instance of `psci' inside Emacs."
+  "Run an inferior instance of `psci' inside Emacs.
+Relies on .psci file for determining the project's root folder."
   (interactive)
-  (let* ((psci-program psci/file-path)
-         (buffer (comint-check-proc psci/buffer-name)))
-    ;; pop to the "*psci*" buffer if the process is dead, the
-    ;; buffer is missing or it's got the wrong mode.
-    (pop-to-buffer-same-window
-     (if (or buffer (not (derived-mode-p 'psci-mode))
-             (comint-check-proc (current-buffer)))
-         (get-buffer-create (or buffer (psci/--process-name psci/buffer-name)))
-       (current-buffer)))
-    ;; create the comint process if there is no buffer.
-    (unless buffer
-      (setq default-directory (psci/--project-root!))
-      (apply 'make-comint-in-buffer psci/buffer-name buffer
-             psci-program psci/arguments)
-      (psci-mode))))
+  (-if-let (project-root-folder (psci/--project-root!))
+      (let* ((psci-program psci/file-path)
+             (buffer (comint-check-proc psci/buffer-name)))
+        ;; pop to the "*psci*" buffer if the process is dead, the
+        ;; buffer is missing or it's got the wrong mode.
+        (pop-to-buffer-same-window
+         (if (or buffer (not (derived-mode-p 'psci-mode))
+                 (comint-check-proc (current-buffer)))
+             (get-buffer-create (or buffer (psci/--process-name psci/buffer-name)))
+           (current-buffer)))
+        ;; create the comint process if there is no buffer.
+        (unless buffer
+          (setq default-directory (psci/--project-root!))
+          (apply 'make-comint-in-buffer psci/buffer-name buffer
+                 psci-program psci/arguments)
+          (psci-mode)))
+    (psci/log "No .psci file so we cannot determine the root project folder. Please, add one.")))
 
 (defvar psci-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
