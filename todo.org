@@ -6,7 +6,8 @@
 - [ ] Add `:s import` binding
 - [ ] Add `:s loaded` binding
 - [ ] Make psci's default completion work
-* IN-PROGRESS 0.0.6 [100%]
+* DONE 0.0.6 [100%]
+CLOSED: [2015-01-14 Wed 09:03]
 - [X] Prepare backlog
 - [X] Update version
 - [X] Add TOC to the README.org (Cheers to org-toc!)
