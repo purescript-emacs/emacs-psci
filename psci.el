@@ -210,7 +210,7 @@ Relies on .psci file for determining the project's root folder."
   "Load the module inside the repl session."
   (interactive)
   (-when-let (module-name (psci/--compute-module-name!))
-    (psci/--run-psci-command! (format ":i %s" module-name))))
+    (psci/--run-psci-command! (format "import %s" module-name))))
 
 ;;;###autoload
 (defun psci/load-project-modules! ()
