@@ -63,7 +63,7 @@
 (defvar psci/file-path "psci"
   "Path to the program used by `psci' function.")
 
-(defvar psci/arguments '()
+(defvar psci/arguments '("src/**/*.purs" "bower_components/purescript-*/src/**/*.purs")
   "Commandline arguments to pass to `psci' function.")
 
 (defvar psci/prompt "> "
@@ -84,9 +84,9 @@
 (defun psci/--project-root! ()
   "Determine the project's root folder.
 Beware, can return nil if no .psci file is found."
-  (-when-let (project-root (->> psci/project-module-file
-                                (locate-dominating-file default-directory)))
-    (expand-file-name project-root)))
+  (if (fboundp 'projectile-project-root)
+      (projectile-project-root)
+    (file-name-directory (buffer-file-name))))
 
 (defun psci/--process-name (buffer-name)
   "Compute the buffer's process name based on BUFFER-NAME."
@@ -114,11 +114,9 @@ Assumes the location of the modules is the project root folder."
          (psci-module-file   (psci/--project-psci-file parent-root-folder)))
     (when psci-module-file
       (->> psci-module-file
-        psci/--file-content
-        (s-split "\n")
-        (--map (s-concat "./" (cadr (s-split ":m " it))))
-        (-filter 'file-exists-p)
-        nreverse))))
+           psci/--file-content
+           (s-split "\n")
+           nreverse))))
 
 (defun psci/--compute-modules-folder (project-root-folder)
   "Compute the psci modules folder from PROJECT-ROOT-FOLDER."
@@ -127,12 +125,7 @@ Assumes the location of the modules is the project root folder."
 (defun psci/--run-psci-command! (command)
   "Run psci COMMAND as string."
   (-when-let (process (get-buffer-process (psci/--process-name psci/buffer-name)))
-    (comint-simple-send process command)
-    (process-send-eof process)))
-
-(defun psci/--load-file! (filename)
-  "Load the purescript FILENAME inside the current running session."
-  (psci/--run-psci-command! (format ":m %s" filename)))
+    (comint-simple-send process command)))
 
 (defun psci/--compute-module-name! ()
   "Compute the current file's module name."
@@ -154,7 +147,7 @@ Relies on .psci file for determining the project's root folder."
              (buffer (comint-check-proc psci/buffer-name)))
         ;; pop to the "*psci*" buffer if the process is dead, the
         ;; buffer is missing or it's got the wrong mode.
-        (pop-to-buffer-same-window
+        (pop-to-buffer
          (if (or buffer (not (derived-mode-p 'psci-mode))
                  (comint-check-proc (current-buffer)))
              (get-buffer-create (or buffer (psci/--process-name psci/buffer-name)))
@@ -163,7 +156,7 @@ Relies on .psci file for determining the project's root folder."
         (unless buffer
           (setq default-directory (psci/--project-root!))
           (apply 'make-comint-in-buffer psci/buffer-name buffer
-                 psci-program psci/arguments)
+                 psci-program nil psci/arguments)
           (psci-mode)))
     (psci/log "No .psci file so we cannot determine the root project folder. Please, add one.")))
 
@@ -178,6 +171,7 @@ Relies on .psci file for determining the project's root folder."
   "Major mode for `run-psci'.
 
 \\<psci-mode-map>"
+  (require 'purescript-font-lock)
   (set (make-local-variable 'comint-prompt-regexp) (concat "^" (regexp-quote psci/prompt)))
   (set (make-local-variable 'paragraph-separate) "\\'") ;; so commands like M-{ and M-} work.
   (set (make-local-variable 'paragraph-start) comint-prompt-regexp)
@@ -196,14 +190,9 @@ Relies on .psci file for determining the project's root folder."
 (defun psci/load-current-file! ()
   "Load the current file in the psci repl."
   (interactive)
-  (lexical-let ((archive-folder (psci/--compute-modules-folder (psci/--project-root!)))
-                (module-name    (psci/--compute-module-name!)))
-    (when module-name
-      (deferred:$
-        (deferred:process-shell (format "rm -rf %s/node_modules/%s" archive-folder module-name))
-        (deferred:nextc it
-          (lambda ()
-            (call-interactively 'psci/reset!)))))))
+  (save-buffer)
+  (call-interactively 'psci/reset!)
+  (call-interactively 'psci/load-module!))
 
 ;;;###autoload
 (defun psci/load-module! ()
@@ -223,20 +212,20 @@ We chose to load the .psci file's content (the purescript doc proposes its use).
       (deferred:nextc it (lambda () (call-interactively 'psci/reset!)))                                         ;; flush in-memory version
       (deferred:nextc it                                                                                   ;; at last reload all files
         (lambda ()
-          (-when-let (modules (psci/--project-module-files!))
-            (mapc #'psci/--load-file! modules)))))))
+          (-when-let (commands (psci/--project-module-files!))
+            (mapc #'psci/--run-psci-command! commands)))))))
 
 ;;;###autoload
 (defun psci/reset! ()
   "Reset the current status of the repl session."
   (interactive)
-  (psci/--run-psci-command! ":r"))
+  (psci/--run-psci-command! ":reset"))
 
 ;;;###autoload
 (defun psci/quit! ()
   "Quit the psci session."
   (interactive)
-  (psci/--run-psci-command! ":q"))
+  (psci/--run-psci-command! ":quit"))
 
 (defvar inferior-psci-mode-map
   (let ((map (make-sparse-keymap)))
