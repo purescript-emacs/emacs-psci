@@ -1,11 +1,15 @@
 #+title: backlog
 #+author: ardumont
 
-* 0.0.7 [%]
-- [ ] Add :b binding
-- [ ] Add `:s import` binding
-- [ ] Add `:s loaded` binding
-- [ ] Make psci's default completion work
+* 0.0.8 [%]
+- [ ] #8 - Make psci's default completion work
+
+* 0.0.7 [20%]
+- [X] #10 - updates for psci 0.0.9
+- [ ] Update README about latest development
+- [ ] Add coverage to ease maintenance
+- [ ] Plug CI
+- [ ] Update version
 * DONE 0.0.6 [100%]
 CLOSED: [2015-01-14 Wed 09:03]
 - [X] Prepare backlog
