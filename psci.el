@@ -63,8 +63,10 @@
 (defvar psci/file-path "psci"
   "Path to the program used by `psci' function.")
 
-(defvar psci/arguments '("src/**/*.purs" "bower_components/purescript-*/src/**/*.purs")
-  "Commandline arguments to pass to `psci' function.")
+(defcustom psci/arguments '("src/**/*.purs" "bower_components/purescript-*/src/**/*.purs")
+  "Commandline arguments to pass to `psci' function."
+  :group 'psci
+  :type '(repeat string))
 
 (defvar psci/prompt "> "
   "The psci prompt.")
