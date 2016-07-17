@@ -195,7 +195,7 @@ Relies on .psci file for determining the project's root folder."
 
 (defgroup psci nil "psci customisation group."
   :tag "psci"
-  :version "0.0.9"
+  :version "0.0.4"
   :group 'purescript
   :prefix "psci/")
 
