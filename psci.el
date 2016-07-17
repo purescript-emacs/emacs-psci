@@ -5,7 +5,7 @@
 ;; Author: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Maintainer: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Version: 0.0.6
-;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0") (s "1.9.0") (f "0.17.1") (deferred "0.3.2"))
+;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0") (s "1.9.0") (f "0.17.1"))
 ;; Keywords: purescript psci repl major mode
 ;; URL: https://github.com/ardumont/emacs-psci
 
@@ -53,7 +53,6 @@
 (require 'purescript-mode)
 (require 's)
 (require 'f)
-(require 'deferred)
 
 ;; constants or variables
 
