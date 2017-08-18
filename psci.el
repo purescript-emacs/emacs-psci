@@ -108,6 +108,10 @@ When FILENAME is nil or not a real file, returns nil."
       (search-forward-regexp regexp)
       (match-string 1))))
 
+(defun psci/--get-psc-package-sources! ()
+  (when (file-exists-p "psc-package.json")
+    (split-string (shell-command-to-string "psc-package sources"))))
+
 ;; public functions
 
 ;;;###autoload
@@ -128,9 +132,8 @@ Relies on .psci file for determining the project's root folder."
         ;; create the comint process if there is no buffer.
         (unless buffer
           (setq default-directory (psci/--project-root!))
-          (let ((full-arg-list (if (file-exists-p "psc-package.json")
-                                   (let ((psc-package-sources (split-string (shell-command-to-string "psc-package sources"))))
-                                     (append psci/arguments psc-package-sources))
+          (let ((full-arg-list (-if-let (psc-package-sources (psci/--get-psc-package-sources!))
+                                   (append psci/arguments psc-package-sources)
                                  psci/arguments)))
             (apply 'make-comint-in-buffer psci/buffer-name buffer
                    psci-program nil full-arg-list))
