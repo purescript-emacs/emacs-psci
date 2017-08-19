@@ -146,6 +146,37 @@ Relies on .psci file for determining the project's root folder."
     map)
   "Basic mode map for `psci'.")
 
+(defun psci-completion-preoutput-filter (string)
+  (setq psci-completion-captured-output (concat psci-completion-captured-output string))
+  "")
+
+(defun psci-tidy-completion-output (response)
+  (let* ((response-lines (split-string response "\n" t))
+         (response-lines-without-prompt (nbutlast response-lines))
+         (without-leading-space (lambda (r)
+                                  (substring r 1))))
+    (mapcar without-leading-space response-lines-without-prompt)))
+
+(defun psci-tab-completion ()
+  (let* ((line (thing-at-point 'line t))
+         (command (format ":complete %s" line)))
+    (-when-let (process (get-buffer-process (psci/--process-name psci/buffer-name)))
+      (add-hook 'comint-preoutput-filter-functions 'psci-completion-preoutput-filter nil t)
+      (comint-simple-send process command)
+      (accept-process-output process)
+      (remove-hook 'comint-preoutput-filter-functions 'psci-completion-preoutput-filter t)
+      (let ((response psci-completion-captured-output))
+        (setq psci-completion-captured-output "")
+        (save-excursion
+          (let* ((end (point))
+                 (start (+ (re-search-backward comint-prompt-regexp)
+                           (length psci/prompt)))
+                 (results (psci-tidy-completion-output response)))
+            (list start end results)))))))
+
+(defvar psci-dynamic-complete-functions
+  '(psci-tab-completion))
+
 ;;;###autoload
 (define-derived-mode psci-mode comint-mode "psci"
   "Major mode for `run-psci'.
@@ -164,7 +195,9 @@ Relies on .psci file for determining the project's root folder."
   (set (make-local-variable 'comint-input-filter-functions) nil)
   (set (make-local-variable 'font-lock-defaults) '(purescript-font-lock-keywords t))
   (set (make-local-variable 'comment-start) "-- ")
-  (set (make-local-variable 'comment-use-syntax) t))
+  (set (make-local-variable 'comment-use-syntax) t)
+  (set (make-local-variable 'comint-dynamic-complete-functions) psci-dynamic-complete-functions)
+  (set (make-local-variable 'psci-completion-captured-output) ""))
 
 ;;;###autoload
 (defun psci/load-current-file! ()
