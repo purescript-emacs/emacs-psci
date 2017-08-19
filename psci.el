@@ -167,12 +167,13 @@ Relies on .psci file for determining the project's root folder."
       (remove-hook 'comint-preoutput-filter-functions 'psci-completion-preoutput-filter t)
       (let ((response psci-completion-captured-output))
         (setq psci-completion-captured-output "")
-        (save-excursion
-          (let* ((end (point))
-                 (start (+ (re-search-backward comint-prompt-regexp)
-                           (length psci/prompt)))
-                 (results (psci-tidy-completion-output response)))
-            (list start end results)))))))
+        (when (not (string-prefix-p "Unrecognized directive." response))
+          (save-excursion
+            (let* ((end (point))
+                   (start (+ (re-search-backward comint-prompt-regexp)
+                             (length psci/prompt)))
+                   (results (psci-tidy-completion-output response)))
+              (list start end results))))))))
 
 (defvar psci-dynamic-complete-functions
   '(psci-tab-completion))
