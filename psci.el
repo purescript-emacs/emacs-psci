@@ -59,8 +59,10 @@
 (defvar psci/buffer-name "psci"
   "Buffer name of the psci buffer.")
 
-(defvar psci/file-path "psci"
-  "Path to the program used by `psci' function.")
+(defcustom psci/purs-path "purs"
+  "Path to the `purs' binary"
+  :group 'psci
+  :type 'string)
 
 (defcustom psci/arguments '("src/**/*.purs" "bower_components/purescript-*/src/**/*.purs")
   "Commandline arguments to pass to `psci' function."
@@ -120,7 +122,7 @@ When FILENAME is nil or not a real file, returns nil."
 Relies on .psci file for determining the project's root folder."
   (interactive)
   (-if-let (project-root-folder (psci/--project-root!))
-      (let* ((psci-program psci/file-path)
+      (let* ((psci-program psci/purs-path)
              (buffer (comint-check-proc psci/buffer-name)))
         ;; pop to the "*psci*" buffer if the process is dead, the
         ;; buffer is missing or it's got the wrong mode.
@@ -136,7 +138,7 @@ Relies on .psci file for determining the project's root folder."
                                    (append psci/arguments psc-package-sources)
                                  psci/arguments)))
             (apply 'make-comint-in-buffer psci/buffer-name buffer
-                   psci-program nil full-arg-list))
+                   psci-program nil "repl" full-arg-list))
           (psci-mode)))
     (psci/log "No .psci file so we cannot determine the root project folder. Please, add one.")))
 
