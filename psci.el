@@ -117,30 +117,29 @@ When FILENAME is nil or not a real file, returns nil."
 ;; public functions
 
 ;;;###autoload
-(defun psci ()
+(defun psci (project-root-folder)
   "Run an inferior instance of `psci' inside Emacs.
 Relies on .psci file for determining the project's root folder."
-  (interactive)
-  (-if-let (project-root-folder (psci/--project-root!))
-      (let* ((psci-program psci/purs-path)
-             (buffer (comint-check-proc psci/buffer-name)))
-        ;; pop to the "*psci*" buffer if the process is dead, the
-        ;; buffer is missing or it's got the wrong mode.
-        (pop-to-buffer
-         (if (or buffer (not (derived-mode-p 'psci-mode))
-                 (comint-check-proc (current-buffer)))
-             (get-buffer-create (or buffer (psci/--process-name psci/buffer-name)))
-           (current-buffer)))
-        ;; create the comint process if there is no buffer.
-        (unless buffer
-          (setq default-directory (psci/--project-root!))
-          (let ((full-arg-list (-if-let (psc-package-sources (psci/--get-psc-package-sources!))
-                                   (append psci/arguments psc-package-sources)
-                                 psci/arguments)))
-            (apply 'make-comint-in-buffer psci/buffer-name buffer
-                   psci-program nil "repl" full-arg-list))
-          (psci-mode)))
-    (psci/log "No .psci file so we cannot determine the root project folder. Please, add one.")))
+  (interactive (list (read-directory-name "Project root? "
+                                          (psci/--project-root!))))
+  (let* ((psci-program psci/purs-path)
+         (buffer (comint-check-proc psci/buffer-name)))
+    ;; pop to the "*psci*" buffer if the process is dead, the
+    ;; buffer is missing or it's got the wrong mode.
+    (pop-to-buffer
+     (if (or buffer (not (derived-mode-p 'psci-mode))
+             (comint-check-proc (current-buffer)))
+         (get-buffer-create (or buffer (psci/--process-name psci/buffer-name)))
+       (current-buffer)))
+    ;; create the comint process if there is no buffer.
+    (unless buffer
+      (setq default-directory project-root-folder)
+      (let ((full-arg-list (-if-let (psc-package-sources (psci/--get-psc-package-sources!))
+                               (append psci/arguments psc-package-sources)
+                             psci/arguments)))
+        (apply 'make-comint-in-buffer psci/buffer-name buffer
+               psci-program nil "repl" full-arg-list))
+      (psci-mode))))
 
 (defvar psci-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
