@@ -81,7 +81,7 @@
 (defun psci/--project-root! ()
   "Determine the project's root folder.
 Beware, can return nil if no .psci file is found."
-  (if (fboundp 'projectile-project-root)
+  (if (and (fboundp 'projectile-project-root) (projectile-project-p))
       (projectile-project-root)
     (file-name-directory (buffer-file-name))))
 
