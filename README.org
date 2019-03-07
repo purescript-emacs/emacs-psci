@@ -178,7 +178,7 @@ Also, I prefer code that is understandable (ymmv) and doc-stringified.
 
 Issues, there will be.
 
-Open issues [[https://github.com/ardumont/emacs-psci/issues][on the tracker]], I'll do my best to answer.
+Open issues [[https://github.com/purescript-emacs/emacs-psci/issues][on the tracker]], I'll do my best to answer.
 
 Just, be sure to be clear, complete and concise about what your trouble is.
 

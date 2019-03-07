@@ -7,7 +7,7 @@
 ;; Version: 0.0.6
 ;; Package-Requires: ((purescript-mode "13.10") (dash "2.9.0") (s "1.9.0") (f "0.17.1"))
 ;; Keywords: purescript psci repl major mode
-;; URL: https://github.com/ardumont/emacs-psci
+;; URL: https://github.com/purescript-emacs/emacs-psci
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -44,7 +44,7 @@
 ;; (add-to-list 'rtog/mode-repl-alist '(purescript-mode . psci))
 
 ;; More informations: https://ardumont/emacs-psci
-;; Issue tracker: https://github.com/ardumont/emacs-psci/issues
+;; Issue tracker: https://github.com/purescript-emacs/emacs-psci/issues
 
 ;;; Code:
 
