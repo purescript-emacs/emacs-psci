@@ -83,18 +83,18 @@
 
 ;; private functions
 
-(defun psci/--project-root! ()
+(defun psci--project-root! ()
   "Determine the project's root folder.
 Beware, can return nil if no .psci file is found."
   (if (and (fboundp 'projectile-project-root) (projectile-project-p))
       (projectile-project-root)
     default-directory))
 
-(defun psci/--process-name (buffer-name)
+(defun psci--process-name (buffer-name)
   "Compute the buffer's process name based on BUFFER-NAME."
   (format "*%s*" buffer-name))
 
-(defun psci/--file-content (filename)
+(defun psci--file-content (filename)
   "Load FILENAME's content as a string.
 When FILENAME is nil or not a real file, returns nil."
   (when (and filename (file-exists-p filename))
@@ -102,12 +102,12 @@ When FILENAME is nil or not a real file, returns nil."
       (insert-file-contents filename)
       (buffer-substring-no-properties (point-min) (point-max)))))
 
-(defun psci/--run-psci-command! (command)
+(defun psci--run-psci-command! (command)
   "Run psci COMMAND as string."
-  (-when-let (process (get-buffer-process (psci/--process-name psci/buffer-name)))
+  (-when-let (process (get-buffer-process (psci--process-name psci/buffer-name)))
     (comint-simple-send process command)))
 
-(defun psci/--compute-module-name! ()
+(defun psci--compute-module-name! ()
   "Compute the current file's module name."
   (save-excursion
     (goto-char (point-min))
@@ -115,15 +115,15 @@ When FILENAME is nil or not a real file, returns nil."
       (search-forward-regexp regexp)
       (match-string 1))))
 
-(defun psci/--get-psc-package-sources! ()
+(defun psci--get-psc-package-sources! ()
   "Find extra source path globs using purescript package tools,if they appear to be used."
   (cond
    ((file-exists-p "psc-package.json")
-    (process-lines (psci/--executable-find-relative psci/psc-package-path) "sources"))
+    (process-lines (psci--executable-find-relative psci/psc-package-path) "sources"))
    ((file-exists-p "spago.dhall")
-    (process-lines (psci/--executable-find-relative psci/spago-path) "sources"))))
+    (process-lines (psci--executable-find-relative psci/spago-path) "sources"))))
 
-(defun psci/--executable-find-relative (path)
+(defun psci--executable-find-relative (path)
   "If PATH is a relative path to an executable, return its full path.
 Otherwise, just return PATH."
   (let ((relative (expand-file-name path)))
@@ -140,17 +140,17 @@ If not supplied, the root folder will be guessed using
 `projectile-project-root' (if available), otherwise it will
 default to the current buffer's directory."
   (interactive (list (read-directory-name "Project root? "
-                                          (psci/--project-root!))))
+                                          (psci--project-root!))))
   (let* ((default-directory project-root-folder)
          (psci-program psci/purs-path)
-         (extra-sources (psci/--get-psc-package-sources!))
+         (extra-sources (psci--get-psc-package-sources!))
          (buffer (comint-check-proc psci/buffer-name)))
     ;; pop to the "*psci*" buffer if the process is dead, the
     ;; buffer is missing or it's got the wrong mode.
     (pop-to-buffer
      (if (or buffer (not (derived-mode-p 'psci-mode))
              (comint-check-proc (current-buffer)))
-         (get-buffer-create (or buffer (psci/--process-name psci/buffer-name)))
+         (get-buffer-create (or buffer (psci--process-name psci/buffer-name)))
        (current-buffer)))
     ;; create the comint process if there is no buffer.
     (unless buffer
@@ -197,20 +197,20 @@ default to the current buffer's directory."
 (defun psci/load-module! ()
   "Load the module inside the repl session."
   (interactive)
-  (-when-let (module-name (psci/--compute-module-name!))
-    (psci/--run-psci-command! (format "import %s" module-name))))
+  (-when-let (module-name (psci--compute-module-name!))
+    (psci--run-psci-command! (format "import %s" module-name))))
 
 ;;;###autoload
 (defun psci/reset! ()
   "Reset the current status of the repl session."
   (interactive)
-  (psci/--run-psci-command! ":reset"))
+  (psci--run-psci-command! ":reset"))
 
 ;;;###autoload
 (defun psci/quit! ()
   "Quit the psci session."
   (interactive)
-  (psci/--run-psci-command! ":quit"))
+  (psci--run-psci-command! ":quit"))
 
 (defvar inferior-psci-mode-map
   (let ((map (make-sparse-keymap)))
