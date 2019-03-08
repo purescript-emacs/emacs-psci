@@ -64,6 +64,16 @@
   :group 'psci
   :type 'string)
 
+(defcustom psci/psc-package-path "psc-package"
+  "Path to the `psc-package' binary."
+  :group 'psci
+  :type 'string)
+
+(defcustom psci/spago-path "spago"
+  "Path to the `spago' binary."
+  :group 'psci
+  :type 'string)
+
 (defcustom psci/arguments '("src/**/*.purs" "bower_components/purescript-*/src/**/*.purs")
   "Commandline arguments to pass to `psci' function."
   :group 'psci
@@ -111,8 +121,19 @@ When FILENAME is nil or not a real file, returns nil."
       (match-string 1))))
 
 (defun psci/--get-psc-package-sources! ()
-  (when (file-exists-p "psc-package.json")
-    (split-string (shell-command-to-string "psc-package sources"))))
+  (cond
+   ((file-exists-p "psc-package.json")
+    (process-lines (psci/--executable-find-relative psci/psc-package-path) "sources"))
+   ((file-exists-p "spago.dhall")
+    (process-lines (psci/--executable-find-relative psci/spago-path) "sources"))))
+
+(defun psci/--executable-find-relative (path)
+  "If PATH is a relative path to an executable, return its full path.
+Otherwise, just return PATH."
+  (let ((relative (expand-file-name path)))
+    (if (file-executable-p relative)
+        relative
+      path)))
 
 ;; public functions
 
@@ -122,7 +143,9 @@ When FILENAME is nil or not a real file, returns nil."
 Relies on .psci file for determining the project's root folder."
   (interactive (list (read-directory-name "Project root? "
                                           (psci/--project-root!))))
-  (let* ((psci-program psci/purs-path)
+  (let* ((default-directory project-root-folder)
+         (psci-program psci/purs-path)
+         (extra-sources (psci/--get-psc-package-sources!))
          (buffer (comint-check-proc psci/buffer-name)))
     ;; pop to the "*psci*" buffer if the process is dead, the
     ;; buffer is missing or it's got the wrong mode.
@@ -133,10 +156,7 @@ Relies on .psci file for determining the project's root folder."
        (current-buffer)))
     ;; create the comint process if there is no buffer.
     (unless buffer
-      (setq default-directory project-root-folder)
-      (let ((full-arg-list (-if-let (psc-package-sources (psci/--get-psc-package-sources!))
-                               (append psci/arguments psc-package-sources)
-                             psci/arguments)))
+      (let ((full-arg-list (append psci/arguments extra-sources)))
         (apply 'make-comint-in-buffer psci/buffer-name buffer
                psci-program nil "repl" full-arg-list))
       (psci-mode))))
