@@ -50,7 +50,7 @@
 
 (require 'comint)
 (require 'dash)
-(require 'purescript-mode)
+(require 'purescript-font-lock)
 
 ;; constants or variables
 
@@ -169,7 +169,6 @@ default to the current buffer's directory."
   "Major mode for `run-psci'.
 
 \\<psci-mode-map>"
-  (require 'purescript-font-lock)
   (setq-local comint-prompt-regexp (concat "^" (regexp-quote psci/prompt)))
   (setq-local paragraph-separate "\\'") ;; so commands like M-{ and M-} work.
   (setq-local paragraph-start comint-prompt-regexp)
