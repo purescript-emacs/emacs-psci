@@ -83,10 +83,6 @@
 
 ;; private functions
 
-(defun psci/log (msg)
-  "Log MSG for psci."
-  (message (format "psci - %s" msg)))
-
 (defun psci/--project-root! ()
   "Determine the project's root folder.
 Beware, can return nil if no .psci file is found."
