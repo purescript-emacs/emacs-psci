@@ -83,7 +83,7 @@
 Beware, can return nil if no .psci file is found."
   (if (and (fboundp 'projectile-project-root) (projectile-project-p))
       (projectile-project-root)
-    (file-name-directory (buffer-file-name))))
+    default-directory))
 
 (defun psci/--process-name (buffer-name)
   "Compute the buffer's process name based on BUFFER-NAME."
