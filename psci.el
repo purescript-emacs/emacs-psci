@@ -138,7 +138,7 @@ Otherwise, just return PATH."
 If not supplied, the root folder will be guessed using
 `projectile-project-root' (if available), otherwise it will
 default to the current buffer's directory."
-  (interactive (list (read-directory-name "Project root? "
+  (interactive (list (read-directory-name "Project root: "
                                           (psci--project-root!))))
   (let* ((default-directory project-root-folder)
          (psci-program psci/purs-path)
