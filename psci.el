@@ -5,7 +5,7 @@
 ;; Author: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Maintainer: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Version: 0.0.6
-;; Package-Requires: ((emacs "24.4") (purescript-mode "13.10") (dash "2.9.0") (s "1.9.0"))
+;; Package-Requires: ((emacs "24.4") (purescript-mode "13.10") (dash "2.9.0"))
 ;; Keywords: languages purescript psci repl
 ;; URL: https://github.com/purescript-emacs/emacs-psci
 
@@ -51,7 +51,6 @@
 (require 'comint)
 (require 'dash)
 (require 'purescript-mode)
-(require 's)
 
 ;; constants or variables
 
