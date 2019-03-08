@@ -59,22 +59,22 @@
   "Buffer name of the psci buffer.")
 
 (defcustom psci/purs-path "purs"
-  "Path to the `purs' binary"
+  "Path to the \"purs\" binary."
   :group 'psci
   :type 'string)
 
 (defcustom psci/psc-package-path "psc-package"
-  "Path to the `psc-package' binary."
+  "Path to the \"psc-package\" binary."
   :group 'psci
   :type 'string)
 
 (defcustom psci/spago-path "spago"
-  "Path to the `spago' binary."
+  "Path to the \"spago\" binary."
   :group 'psci
   :type 'string)
 
 (defcustom psci/arguments '("src/**/*.purs" "bower_components/purescript-*/src/**/*.purs")
-  "Commandline arguments to pass to `psci' function."
+  "Command-line arguments to pass to `psci' function."
   :group 'psci
   :type '(repeat string))
 
@@ -95,7 +95,7 @@ Beware, can return nil if no .psci file is found."
   (format "*%s*" buffer-name))
 
 (defun psci/--file-content (filename)
-  "Load the FILENAME's content as a string.
+  "Load FILENAME's content as a string.
 When FILENAME is nil or not a real file, returns nil."
   (when (and filename (file-exists-p filename))
     (with-temp-buffer
@@ -116,6 +116,7 @@ When FILENAME is nil or not a real file, returns nil."
       (match-string 1))))
 
 (defun psci/--get-psc-package-sources! ()
+  "Find extra source path globs using purescript package tools,if they appear to be used."
   (cond
    ((file-exists-p "psc-package.json")
     (process-lines (psci/--executable-find-relative psci/psc-package-path) "sources"))
@@ -134,8 +135,10 @@ Otherwise, just return PATH."
 
 ;;;###autoload
 (defun psci (project-root-folder)
-  "Run an inferior instance of `psci' inside Emacs.
-Relies on .psci file for determining the project's root folder."
+  "Run an inferior instance of \"psci\" inside Emacs, in PROJECT-ROOT-FOLDER.
+If not supplied, the root folder will be guessed using
+`projectile-project-root' (if available), otherwise it will
+default to the current buffer's directory."
   (interactive (list (read-directory-name "Project root? "
                                           (psci/--project-root!))))
   (let* ((default-directory project-root-folder)
