@@ -51,6 +51,7 @@
 (require 'comint)
 (require 'dash)
 (require 'purescript-font-lock)
+(require 'cl-lib)
 
 ;; constants or variables
 
@@ -133,7 +134,7 @@ Otherwise, just return PATH."
 ;; public functions
 
 ;;;###autoload
-(defun psci (project-root-folder)
+(cl-defun psci (&optional (project-root-folder (psci--project-root!)))
   "Run an inferior instance of \"psci\" inside Emacs, in PROJECT-ROOT-FOLDER.
 If not supplied, the root folder will be guessed using
 `projectile-project-root' (if available), otherwise it will
