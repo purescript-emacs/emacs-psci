@@ -143,7 +143,8 @@ default to the current buffer's directory."
                                           (psci--project-root!))))
   (let* ((default-directory project-root-folder)
          (psci-program psci/purs-path)
-         (extra-sources (psci--get-psc-package-sources!))
+         (extra-sources (unless (string-match "pulp" psci-program)
+                          (psci--get-psc-package-sources!))
          (buffer (comint-check-proc psci/buffer-name)))
     ;; pop to the "*psci*" buffer if the process is dead, the
     ;; buffer is missing or it's got the wrong mode.
