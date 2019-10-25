@@ -51,6 +51,7 @@
 (require 'comint)
 (require 'dash)
 (require 'purescript-font-lock)
+(require 'cl-lib)
 
 ;; constants or variables
 
@@ -133,7 +134,7 @@ Otherwise, just return PATH."
 ;; public functions
 
 ;;;###autoload
-(defun psci (project-root-folder)
+(cl-defun psci (&optional (project-root-folder (psci--project-root!)))
   "Run an inferior instance of \"psci\" inside Emacs, in PROJECT-ROOT-FOLDER.
 If not supplied, the root folder will be guessed using
 `projectile-project-root' (if available), otherwise it will
@@ -142,7 +143,8 @@ default to the current buffer's directory."
                                           (psci--project-root!))))
   (let* ((default-directory project-root-folder)
          (psci-program psci/purs-path)
-         (extra-sources (psci--get-psc-package-sources!))
+         (extra-sources (unless (string-match "pulp" psci-program)
+                          (psci--get-psc-package-sources!))
          (buffer (comint-check-proc psci/buffer-name)))
     ;; pop to the "*psci*" buffer if the process is dead, the
     ;; buffer is missing or it's got the wrong mode.
