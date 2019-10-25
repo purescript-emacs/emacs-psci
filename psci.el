@@ -164,6 +164,37 @@ default to the current buffer's directory."
     map)
   "Basic mode map for `psci'.")
 
+(defun psci-completion-preoutput-filter (string)
+  (setq psci-completion-captured-output (concat psci-completion-captured-output string))
+  "")
+
+(defun psci-tidy-completion-output (response)
+  (let* ((response-lines (split-string response "\n" t nil))
+         (response-lines-without-prompt (nbutlast response-lines)))
+    response-lines-without-prompt))
+
+
+(defun psci-tab-completion ()
+  (let* ((line (thing-at-point 'line t))
+         (command (format ":complete %s" line)))
+    (-when-let (process (get-buffer-process (psci--process-name psci/buffer-name)))
+      (add-hook 'comint-preoutput-filter-functions 'psci-completion-preoutput-filter nil t)
+      (comint-simple-send process command)
+      (accept-process-output process)
+      (remove-hook 'comint-preoutput-filter-functions 'psci-completion-preoutput-filter t)
+      (let ((response psci-completion-captured-output))
+        (setq psci-completion-captured-output "")
+        (when (not (string-prefix-p "Unrecognized directive." response))
+          (save-excursion
+            (let* ((end (point))
+                   (start (+ (re-search-backward comint-prompt-regexp)
+                             (length psci/prompt)))
+                   (results (psci-tidy-completion-output response)))
+              (list start end results))))))))
+
+(defvar psci-dynamic-complete-functions
+  '(psci-tab-completion))
+
 ;;;###autoload
 (define-derived-mode psci-mode comint-mode "psci"
   "Major mode for `run-psci'.
@@ -181,7 +212,10 @@ default to the current buffer's directory."
   (setq-local comint-input-filter-functions nil)
   (setq-local font-lock-defaults '(purescript-font-lock-keywords t))
   (setq-local comment-start "-- ")
-  (setq-local comment-use-syntax t))
+  (setq-local comment-use-syntax t)
+  (setq-local comment-use-syntax t)
+  (setq-local comint-dynamic-complete-functions psci-dynamic-complete-functions)
+  (setq-local psci-completion-captured-output ""))
 
 ;;;###autoload
 (defun psci/load-current-file! ()
@@ -202,7 +236,7 @@ default to the current buffer's directory."
 (defun psci/reset! ()
   "Reset the current status of the repl session."
   (interactive)
-  (psci--run-psci-command! ":reset"))
+  (psci--run-psci-command! ":clear"))
 
 ;;;###autoload
 (defun psci/quit! ()
