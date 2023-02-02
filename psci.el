@@ -85,9 +85,13 @@
 (defun psci--project-root! ()
   "Determine the project's root folder.
 Beware, can return nil if no .psci file is found."
-  (if (and (fboundp 'projectile-project-root) (projectile-project-p))
-      (projectile-project-root)
-    default-directory))
+  (cond
+   ((and (fboundp 'projectile-project-root) (projectile-project-p))
+    (projectile-project-root))
+   ((fboundp 'project-root)
+    (project-root (project-current t)))
+   (t
+    default-directory)))
 
 (defun psci--process-name (buffer-name)
   "Compute the buffer's process name based on BUFFER-NAME."
@@ -136,8 +140,9 @@ Otherwise, just return PATH."
 (defun psci (project-root-folder)
   "Run an inferior instance of \"psci\" inside Emacs, in PROJECT-ROOT-FOLDER.
 If not supplied, the root folder will be guessed using
-`projectile-project-root' (if available), otherwise it will
-default to the current buffer's directory."
+`projectile-project-root', or `project-root' from project.el (if
+available), otherwise it will default to the current buffer's
+directory."
   (interactive (list (read-directory-name "Project root: "
                                           (psci--project-root!))))
   (let* ((default-directory project-root-folder)
