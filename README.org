@@ -121,7 +121,7 @@ M-x el-get-install RET psci RET
 M-x psci
 #+end_src
 
-This will open a psci repl within emacs from your current project root folder (using [[https://github.com/bbatsov/projectile][projectile]] to determine that).
+This will open a psci repl within emacs from your current project root folder (using [[https://github.com/bbatsov/projectile][projectile]] or project.el to determine that).
 
 ** Setup
 
