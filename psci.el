@@ -123,8 +123,8 @@ When FILENAME is nil or not a real file, returns nil."
   (cond
    ((file-exists-p "psc-package.json")
     (process-lines (psci--executable-find-relative psci/psc-package-path) "sources"))
-   ((file-exists-p "spago.dhall")
-    (process-lines (psci--executable-find-relative psci/spago-path) "sources"))))
+   ((or (file-exists-p "spago.dhall") (file-exists-p "spago.yaml"))
+    (process-lines (psci--executable-find-relative psci/spago-path) "sources" "--quiet"))))
 
 (defun psci--executable-find-relative (path)
   "If PATH is a relative path to an executable, return its full path.
