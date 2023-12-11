@@ -5,7 +5,7 @@
 ;; Author: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Maintainer: Antoine R. Dumont <eniotna.t AT gmail.com>
 ;; Version: 0.0.6
-;; Package-Requires: ((emacs "24.4") (purescript-mode "13.10") (dash "2.9.0"))
+;; Package-Requires: ((emacs "25.1") (purescript-mode "13.10") (dash "2.9.0") (inheritenv "0.2"))
 ;; Keywords: languages purescript psci repl
 ;; URL: https://github.com/purescript-emacs/emacs-psci
 
@@ -51,6 +51,7 @@
 (require 'comint)
 (require 'dash)
 (require 'purescript-font-lock)
+(require 'inheritenv)
 
 ;; constants or variables
 
@@ -122,9 +123,9 @@ When FILENAME is nil or not a real file, returns nil."
   "Find extra source path globs using purescript package tools,if they appear to be used."
   (cond
    ((file-exists-p "psc-package.json")
-    (process-lines (psci--executable-find-relative psci/psc-package-path) "sources"))
+    (inheritenv (process-lines (psci--executable-find-relative psci/psc-package-path) "sources")))
    ((or (file-exists-p "spago.dhall") (file-exists-p "spago.yaml"))
-    (process-lines (psci--executable-find-relative psci/spago-path) "sources" "--quiet"))))
+    (inheritenv (process-lines (psci--executable-find-relative psci/spago-path) "sources")))))
 
 (defun psci--executable-find-relative (path)
   "If PATH is a relative path to an executable, return its full path.
