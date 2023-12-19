@@ -119,13 +119,18 @@ When FILENAME is nil or not a real file, returns nil."
       (search-forward-regexp regexp)
       (match-string 1))))
 
+(defun psci--cleanup-sources-filter-predicate! (source)
+  "Predicate to see if SOURCE is suitable to be given to the psci repl."
+  (not (string-empty-p source)))
+
 (defun psci--get-psc-package-sources! ()
   "Find extra source path globs using purescript package tools,if they appear to be used."
-  (cond
-   ((file-exists-p "psc-package.json")
-    (inheritenv (process-lines (psci--executable-find-relative psci/psc-package-path) "sources")))
-   ((or (file-exists-p "spago.dhall") (file-exists-p "spago.yaml"))
-    (inheritenv (process-lines (psci--executable-find-relative psci/spago-path) "sources")))))
+  (-filter 'psci--cleanup-sources-filter-predicate!
+           (cond
+            ((file-exists-p "psc-package.json")
+             (inheritenv (process-lines (psci--executable-find-relative psci/psc-package-path) "sources")))
+            ((or (file-exists-p "spago.dhall") (file-exists-p "spago.yaml"))
+             (inheritenv (process-lines (psci--executable-find-relative psci/spago-path) "sources"))))))
 
 (defun psci--executable-find-relative (path)
   "If PATH is a relative path to an executable, return its full path.
